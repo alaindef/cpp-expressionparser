@@ -62,10 +62,12 @@ string KarPP[256];      // string representation of each character
 //KarPP[1] = 2;
 
 void initDinges(){
-    for (int8_t j= 1; j<256; j++) {kartyp[j] = OTHER; KarPP[j] = "OTHER";};
-    for (int8_t j= 48; j<58; j++) {kartyp[j] = DIGIT; KarPP[j] = "D";};
-    for (int8_t j= 65; j<91; j++) {kartyp[j] = LETT; KarPP[j] = "L";};
-    for (int8_t j= 97; j<123; j++) {kartyp[j] = LETT; KarPP[j] = "L";};
+
+    int test = 0;
+    for (int j= 1; j<256; j++) {kartyp[j] = OTHER; KarPP[j] = "OTHER";};
+    for (int j= 48; j<58; j++) {kartyp[j] = DIGIT; KarPP[j] = "D";};
+    for (int j= 65; j<91; j++) {kartyp[j] = LETT; KarPP[j] = "L";};
+    for (int j= 97; j<123; j++) {kartyp[j] = LETT; KarPP[j] = "L";};
 
     kartyp[95] = LETT; KarPP[95] = "L";
     kartyp[0]  = ETX; KarPP[0] = "ETX";
@@ -95,15 +97,18 @@ bool isa(Token token, vector<TokenType> allowedTypes){
     return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
 };
 
-    bool isaC(char Kar, vector<KarType> allowedTypes){
-    return(count(allowedTypes.begin(), allowedTypes.end(), int(Kar)) > 0);
+bool isaC(char Kar, vector<KarType> allowedTypes){
+//    int found = find(allowedTypes.begin(), allowedTypes.end(), int(Kar));
+    int cnt = count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
+    return(cnt > 0);
     };
 
 // some operator functions
 float add(float x, float y){return (x+y);}
 float invoke    (float x, float y, float (*function) (float, float)){return function(x,y);}
 
-
+void reportln(vector<Token> list, int level, int padding){}
+void reportln(string s, int level){}
 
 
 #endif // DEFS_H

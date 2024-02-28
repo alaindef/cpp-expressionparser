@@ -9,11 +9,9 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp  \
-    kars.cpp
+SOURCES += main.cpp
 
 HEADERS += \
     defs.h \
-    kars.h \
     pass1.h
 

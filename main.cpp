@@ -32,9 +32,12 @@ Token tt = {VARI, 0, "haha", 0};        //test
 int main(int argc, char *argv[])
 {
     (void)(argc);(void)(argv);
+    initDinges();
 
     //tests
-
+    vector<Token> pass1Out;
+    char c = '1';
+    cout << "code c =" << int(c) << endl;
 
     int choice = 0;
     cout << "choose:\n1. create the 4 world part files\n2. create srtmfiles\n3. create both\n4. reduce files to Res400\n5. create both and reduce files to Res400\n";
@@ -53,6 +56,10 @@ int main(int argc, char *argv[])
             break;
         case 5:
             cout << "token is : " << isa(tt, {CHS, ELV_C }) << endl;
+            break;
+        case 6:
+            pass1Out = parse("1+2!");
+            cout << "parser is : " << pass1Out[0].content << " en " << pass1Out[1].content << endl;
             break;
         default:
             cout << "wrong choice " << choice << endl;

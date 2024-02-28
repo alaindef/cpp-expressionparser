@@ -20,6 +20,7 @@ Token makeSymbol(vector<TokenType> expected){
         cursor++;
         return makeSymbol({});                              //makesymbol advances the cursor
                }
+    int intc = int(c);
     int tup = kartyp[int(c)];
                symIn.content = KarPP[int(c)];                       // pretty print
     switch (tup) {
@@ -91,6 +92,35 @@ Token makeSymbol(vector<TokenType> expected){
 //            "     char=$c, symbol=${symIn.content}   ==> < ${expected.contentToString()} >\n"
 //            );
             return symIn;
+}
+
+void clear() {
+            cursor = 0;
+            errorsPresent = false;
+            textIn = "";
+            symList.clear();
+}
+
+vector<Token> parse(string s){
+            clear();
+            textIn = s;
+            cursor = 0;
+            errorsPresent = false;
+            reportln("textIn =  $textIn", 0);
+                do {
+                symIn = makeSymbol({});
+                if (isa(symIn, {ELV_C})) {                                       // substitute '?(' for '?'
+                    symList.push_back({BEXPE, 17, "PAR_R", cursor});     //todo pretty print
+                    };
+                symList.push_back({symIn.type, 17, symIn.content, cursor});
+                    if (isa(symIn, {ELV_Q})) {                                       // substitute '?(' for '?'
+                    symList.push_back({BEXPS, 17, "PAR_L", cursor});        //todo
+                    };
+                } while (symIn.type != EOT);
+
+                reportln(symList, 1, 7);
+                cout << "\n";
+                return symList;
 }
 
 
