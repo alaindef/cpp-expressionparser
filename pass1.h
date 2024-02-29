@@ -2,13 +2,8 @@
 #define PASS1_H
 #include <defs.h>
 
-Token symIn = {NONE, 0, "",0};
-bool isFirstSymbol=true;
-int cursor = 0;
-string textIn= "";
 
-vector<Token> symList;
-bool errorsPresent = false;
+bool isFirstSymbol=true;
 char c= '\u0000';                   //???
 
 
@@ -94,27 +89,25 @@ Token makeSymbol(vector<TokenType> expected){
             return symIn;
 }
 
-void clear() {
+void clear1() {
             cursor = 0;
             errorsPresent = false;
-            textIn = "";
             symList.clear();
 }
 
-vector<Token> parse(string s){
-            clear();
-            textIn = s;
+vector<Token> parse1(){
+            clear1();
             cursor = 0;
             errorsPresent = false;
             reportln("textIn =  $textIn", 0);
                 do {
                 symIn = makeSymbol({});
                 if (isa(symIn, {ELV_C})) {                                       // substitute '?(' for '?'
-                    symList.push_back({BEXPE, 17, "PAR_R", cursor});     //todo pretty print
+                    symList.push_back({BEXPE, 17, ")", cursor});     //todo pretty print
                     };
                 symList.push_back({symIn.type, 17, symIn.content, cursor});
                     if (isa(symIn, {ELV_Q})) {                                       // substitute '?(' for '?'
-                    symList.push_back({BEXPS, 17, "PAR_L", cursor});        //todo
+                    symList.push_back({BEXPS, 17, "(", cursor});        //todo
                     };
                 } while (symIn.type != EOT);
 

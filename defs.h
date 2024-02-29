@@ -77,8 +77,8 @@ void initDinges(){
     kartyp[32] = BLANK; KarPP[32] = "BLANK";
     kartyp[33] = EXCLA; KarPP[33] = "!END!";
     kartyp[35] = HASHT; KarPP[35] = "HASHT";
-    kartyp[40] = PAR_L; KarPP[40] = "PAR_L";
-    kartyp[41] = PAR_R; KarPP[41] = "PAR_R";
+    kartyp[40] = PAR_L; KarPP[40] = "(";
+    kartyp[41] = PAR_R; KarPP[41] = ")";
     kartyp[42] = TIMES; KarPP[42] = "*";
     kartyp[43] = PLUS; KarPP[43] = "+";
     kartyp[45] = MINUS; KarPP[45] = "-";
@@ -91,24 +91,16 @@ void initDinges(){
     kartyp[63] = QUEST; KarPP[63] = "?";
 }
 
+//      finally our maain data structures:
+//  1. the input expression as a text string:
+string textIn= "";
+//  2. the output of PASS1 as a vector of symbols. it is also the input for PASS2.
+//      symbols of type Token, the element "content" can be TODO
+vector<Token> symList;
+//  3. the output of PASS2 as a vector of tokens
+vector<Token> symListOut;
 
-bool isa(Token token, vector<TokenType> allowedTypes){
-//    check if the symbol sym is one of the symbols in the list op
-    return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
-};
 
-bool isaC(char Kar, vector<KarType> allowedTypes){
-//    int found = find(allowedTypes.begin(), allowedTypes.end(), int(Kar));
-    int cnt = count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
-    return(cnt > 0);
-    };
-
-// some operator functions
-float add(float x, float y){return (x+y);}
-float invoke    (float x, float y, float (*function) (float, float)){return function(x,y);}
-
-void reportln(vector<Token> list, int level, int padding){}
-void reportln(string s, int level){}
 
 
 #endif // DEFS_H

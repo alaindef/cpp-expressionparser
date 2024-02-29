@@ -10,11 +10,11 @@
 #include <unistd.h>
 #include <algorithm>        // count function
 
-#include <defs.h>;
+
+#include <defs.h>;          // global definitions
+#include <utils.h>;         // utilities
 
 using namespace std;
-
-typedef int FileNumber;
 
 bool elaps = true;
 clock_t pTime, cTime = clock();
@@ -28,6 +28,10 @@ void reportElapsedTime(string msg){
 
 #include <pass1.h>
 
+#include <pass2.h>
+
+
+
 Token tt = {VARI, 0, "haha", 0};        //test
 int main(int argc, char *argv[])
 {
@@ -35,10 +39,22 @@ int main(int argc, char *argv[])
     initDinges();
 
     //tests
-    vector<Token> pass1Out;
-    char c = '1';
-    cout << "code c =" << int(c) << endl;
+    cout << "testing ... \n" << int(c) << endl;
 
+
+    textIn = "2+(12*(3<4 ?(4/2)*5:(17-5)*3))!";
+    cout << "textIn is: " << textIn << endl;
+    cout << "\nPASS 1 gives : "; parse1();
+    printVector(symList);
+    cout << "\nPASS 2 says  : "; parse2();
+    printVector(symListOut);
+    cout << "\n\nthe end"<< endl;
+
+    return 0;
+
+    //end TEST
+
+    // the following is not used yet
     int choice = 0;
     cout << "choose:\n1. create the 4 world part files\n2. create srtmfiles\n3. create both\n4. reduce files to Res400\n5. create both and reduce files to Res400\n";
     while ((choice==0) | (choice>3)) {
@@ -49,17 +65,6 @@ int main(int argc, char *argv[])
         case 2:
             break;
         case 3:
-            break;
-        case 4:
-//            cout << invoke(BLANK, 3, &add) << endl;
-            cout << "makesymbol " << makeSymbol({VARI, LIT}).type << endl;
-            break;
-        case 5:
-            cout << "token is : " << isa(tt, {CHS, ELV_C }) << endl;
-            break;
-        case 6:
-            pass1Out = parse("1+2!");
-            cout << "parser is : " << pass1Out[0].content << " en " << pass1Out[1].content << endl;
             break;
         default:
             cout << "wrong choice " << choice << endl;

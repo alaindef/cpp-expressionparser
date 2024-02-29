@@ -13,5 +13,7 @@ SOURCES += main.cpp
 
 HEADERS += \
     defs.h \
-    pass1.h
+    pass1.h \
+    pass2.h \
+    utils.h
 
