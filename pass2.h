@@ -10,13 +10,14 @@ void push(Token sym) {
 }
 
 Token nextSymbol(string from, vector<TokenType> expected){
-    if (symList.empty()) throw invalid_argument("from <$from>: symbols missing!");
+    if (symList.empty()) throw invalid_argument("from" + from + ": symbols missing!");
     Token next = symList.back(); symList.pop_back();
     if (expected.empty()) return next;
     if (count(expected.begin(), expected.end(), next.type) > 0) return next;
     errorsPresent = true;
     throw invalid_argument(
-                  "from <$from> at cursor=${next.cursor} symbol={${next.content}, ${next.typ}} NOT IN ${expected.contentToString()}"
+        "from " + from + " at cursor=" + to_string(next.cursor) + " symbol=" + next.content + ", " + ppTokenType[next.type] +
+        "} NOT IN " + "expected" + "}"                                                      // "expected" should be the list of expected types
         );
     return next;
 }
@@ -25,9 +26,9 @@ void bExpression();
 void factor() {
     //next symbol if success
     switch(symIn.type) {
-    case VARI: case LIT: case NUM:
+    case LETT: case DIGIT:
         push(symIn);                                                                        // push???
-        symIn = nextSymbol("factor", {TimesDiv, COMPARE, PlusMin, BEXPE, ELV_Q, EOT});
+        symIn = nextSymbol("factor", {TIMES, DIV, LT,EQ,GT, PLUS, MINUS, PAR_L, PAR_R, QUEST, EXCLA});
         break;
     default: bExpression();
         break;
@@ -36,18 +37,24 @@ void factor() {
 
 
 void term() {
-    if (isa(symIn, {CHS})) {
+    if (isa(symIn, {PLUS,MINUS})  & (symIn.arity == 1)) {
         Token save = symIn;
-        symIn = nextSymbol("term", {VARI,LIT,NUM});
+        symIn = nextSymbol("term", {LETT, DIGIT});
         factor();
-        char ch = 177;
-        if (save.content == "-") push(Token({CHS, "CHS" , oCHS, 1, symIn.cursor}));        // push???
+//        char ch = 177;  I cannot yet displan char 177
+        if (save.content == "-"){
+            save.opcode = 0;
+            save.arity  = 1;
+            push(save);
+        }
+
+//        push(Token({CHS, "CHS+-" , 0, 1, symIn.cursor}));        // push???
 
     }
     factor();
-    while (isa(symIn, {TimesDiv, COMPARE})) {
+    while (isa(symIn, {TIMES, DIV, LT,EQ,GT})) {
         Token save = symIn;
-        symIn = nextSymbol("term", {VARI,LIT,NUM, BEXPS});
+        symIn = nextSymbol("term", {LETT, DIGIT, PAR_L});
         factor();
         push(save);                                                                         // push ???
     }
@@ -55,20 +62,20 @@ void term() {
 
 void expression(){
     term();
-    while (isa(symIn, {PlusMin, ELV_Q, ELV_C})) {
+    while (isa(symIn, {TIMES, DIV, LT,EQ,GT, PLUS, MINUS, QUEST, COLON})) {
         Token save = symIn;
-        symIn = nextSymbol("expression", {VARI,LIT,NUM, BEXPS});
+        symIn = nextSymbol("expression", {LETT, DIGIT, PAR_L});
         term();
-        push(save);             //???
+        if (save.content != "?") push(save);             //do not generate token for "?"
     }
 };
 
 
 void bExpression() {
-    if (isa(symIn, {BEXPS})) {
-        symIn = nextSymbol("bExpression", {VARI,LIT,NUM, BEXPS, CHS});
+    if (isa(symIn, {PAR_L})) {
+        symIn = nextSymbol("bExpression", {LETT, DIGIT, PAR_L, PLUS, MINUS});
         expression();
-        symIn = nextSymbol("bExpression", {VARI,LIT,NUM, TimesDiv, COMPARE, PlusMin, BEXPS, BEXPE, ELV_Q, ELV_C, EOT});
+        symIn = nextSymbol("bExpression", {LETT, DIGIT, TIMES, DIV, LT, EQ, GT, PLUS, MINUS, PAR_L, PAR_R, QUEST, COLON, EXCLA});
     }
 };
 
@@ -88,15 +95,14 @@ vector<Token> parse2(){
     try {
         symIn = nextSymbol("parse", {});
         expression();
-    } catch (invalid_argument) {
-        cout << "PARSE ERROR: ${e.message}" << endl;
+    } catch (const exception& e) {
+        cout << "PARSE ERROR:" << e.what() << endl;
     };
     if (!errorsPresent)
-        cout << "expression parser PASS2 ended succesfully\n ";
+//        cout << "expression parser PASS2 ended succesfully\n ";
     cout << endl;
     return symListOut;
 };
-
 
 
 #endif // PASS2_H

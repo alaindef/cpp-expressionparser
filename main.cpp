@@ -11,8 +11,8 @@
 #include <algorithm>        // count function
 
 
-#include <defs.h>;          // global definitions
-#include <utils.h>;         // utilities
+#include <defs.h>          // global definitions
+#include <utils.h>         // utilities
 
 using namespace std;
 
@@ -38,19 +38,22 @@ int main(int argc, char *argv[])
 
     //tests
     cout << "testing ... \n" << int(c) << endl;
+//    cout << "invoke: " << op2[1](2,3) << endl;
 
-//    cout << "invoke: " << invoke(2,3, op_add) << endl;
+// test cases: uncomment 1 of them to try
 
-    cout << "invoke: " << op2[1](2,3) << endl;
-
-
-    textIn = "-2+(-a3<4 ?4*5:(17-5)*3)!";
 //    textIn = "(2+3)*((1<2) + (6-2)/2)!";
+//    textIn = "(6-2)!";
+//    textIn = "5*(1 + (6-2)*2)!";
 //    textIn = "2*5!";
+//    textIn = "0?2:3!";
+    textIn = "-1+(5<4 ?4*5:(17-5)*3)!";
+
+
     cout << "textIn is: " << textIn << endl;
-    cout << "\nPASS 1 gives :\n"; parse1();
-    printPass2(symList, 4);
-    cout << "\nPASS 2 says  : "; parse2();
+    cout << "\nPASS 1 gives the tokenized input :\n"; parse1();
+    printPass2(symList, 5);
+    cout << "\n\nPASS 2 gives the RPN form of the expression"; parse2();
     printPass2(symListOut, 5);
 
     calcandprint(symListOut);

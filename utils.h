@@ -2,21 +2,22 @@
 #define UTILS_H
 #include <stdio.h>
 #include <iomanip>
+#include <defs.h>
 
-int cursor = 0;
-Token symIn = {NONE, "", oNONE, -1, 0};             // used in both pass1 and pass2
+//int cursor = 0;
+Token symIn = {OTHER, "", -1, -1, 0};             // used in both pass1 and pass2
 bool errorsPresent = false;
 
 bool isa(Token token, vector<TokenType> allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op
     return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
-};
+}
 
 bool isaC(char Kar, vector<KarType> allowedTypes){
     //    int found = find(allowedTypes.begin(), allowedTypes.end(), int(Kar));
     int cnt = count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
     return(cnt > 0);
-};
+}
 
 // some operator functions
 float op_chs(float x){return -x;}
@@ -29,9 +30,9 @@ float op_eq(float x, float y){return x==y;}
 float op_gt(float x, float y){return x>y;}
 float op_elv(float x, float y, float z) {if (x) return y; else return z;}
 
-float invoke(float x, float (*func) (float)) {return func(x);}
-float invoke(float x, float y, float (*func) (float, float)) {return func(x,y);}
-float invoke(float x, float y, float z, float (*func) (float, float,float)) {return func(x,y,z);}
+//float invoke(float x, float (*func) (float)) {return func(x);}
+//float invoke(float x, float y, float (*func) (float, float)) {return func(x,y);}
+//float invoke(float x, float y, float z, float (*func) (float, float,float)) {return func(x,y,z);}
 
 vector<function<float(float)>> op1;
 vector<function<float(float,float)>> op2;

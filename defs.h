@@ -15,27 +15,25 @@ enum KarType
 //PASS 2 will scan the output of PASS1 and generate a list of tokens
 // precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
 //                          or  https://en.wikipedia.org/wiki/Order_of_operations
-enum TokenType
-    {COMMENT, VARI, LIT, NUM, CHS, TimesDiv, PlusMin, COMPARE, ELV_Q, ELV_C, BEXPS, BEXPE, EOT, NONE};
+//enum TokenType
+//    {COMMENT, VARI, LIT, NUM, CHS, TimesDiv, PlusMin, COMPARE, ELV_Q, ELV_C, BEXPS, BEXPE, EOT, NONE};
+typedef KarType TokenType;
 
-// to go from KarType to TokenType we use an array:
-TokenType tokenType[32] =
-    {NONE,  NONE,   NONE,   NONE,   NONE,   BEXPS,  BEXPE,  NONE,   TimesDiv,   TimesDiv,   NONE,   NONE,   COMPARE,COMPARE,COMPARE,    ELV_C,  ELV_Q,  LIT,    NUM,    NONE,   NONE,   EOT,    NONE};
-//  {ETX,   LF,     TAB,    BLANK,  HASHT,  PAR_L,  PAR_R,  DOT,    TIMES,      DIV,        PLUS,   MINUS,  LT,     EQ,     GT,         QUEST,  COLON,  LETT,   DIGIT,  CR,     OTHER,  EXCLA,  TEST};
 // prettyPrint of TokenType:
-string ppTokenType[32] = {"com", "VAR", "LIT", "NUM", "CHS", "*/", "+-" , "CMPR", "?", ":", "(", ")", "EOT", "NON"};
+string ppTokenType[32] =     {"ETX",   "LF", "TAB",    "BLANK",  "HASHT",  "PAR_L",  "PAR_R",  "DOT",   "TIMES",  "DIV", "PLUS",   "MINUS",  "LT", "EQ", "GT", "QUEST",  "COLON",  "LETT",   "DIGIT",  "CR", "OTHER",  "EXCLA",  "TEST"};
 
-enum Opcode {oCHS, oMUL, oDIV, oSUM, oMIN, oLT, oEQ, oGT, oQUE, oCOL, oNONE};
 
-//codes         0     0     1     2     3    4    5    6     0    -1     -1
-//arity         1     2     2     2     2    2    2    2     3    -1     -1
+//              CHS   MUL   DIV   SUM   MIN   LT   EQ   GT   QUE   COL   NONE
+//opcodes         0     0     1     2     3    4    5    6     -1    0     -1
+//arity           1     2     2     2     2    2    2    2     -1    3     -1
 
+uint cursor = 0;
 typedef struct {
     TokenType type;
     string content;
     int opcode;
     int arity;
-    int cursor;
+    uint cursor;
 } Token;
 
 KarType kartyp[256];    // type of each character
@@ -44,11 +42,9 @@ string KarPP[256];      // string representation of each character
 //KarPP[1] = 2;
 
 void initDinges(){
-
-    int test = 0;
     for (int j= 1; j<256; j++) {kartyp[j] = OTHER; KarPP[j] = "OTHER";};
     for (int j= 48; j<58; j++) {kartyp[j] = DIGIT; KarPP[j] = "D";};
-    for (int j= 65; j<91; j++) {kartyp[j] = LETT; KarPP[j] = "L";};
+    for (int j= 65; j<91; j++) {kartyp[j] = LETT ; KarPP[j] = "L";};
     for (int j= 97; j<123; j++) {kartyp[j] = LETT; KarPP[j] = "L";};
 
     kartyp[95] = LETT; KarPP[95] = "L";

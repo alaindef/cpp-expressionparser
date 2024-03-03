@@ -13,63 +13,63 @@ Token makeSymbol(vector<TokenType> expected){
     c = textIn[cursor];
     if (isaC(c, {BLANK, TAB})) {
         cursor++;
-        return makeSymbol({});                              //makesymbol advances the cursor
-               }
-    int intc = int(c);
+        return makeSymbol({});                                                          //makesymbol advances the cursor
+        }
 
-    symIn.content = KarPP[int(c)];                       // pretty print
+    symIn.type = kartyp[int(c)];
+    symIn.content = KarPP[int(c)];                                                      // pretty print
     symIn.opcode  = -1;
+    symIn.arity   = -1;
+    symIn.cursor  = cursor;                                                             // not used for now
     KarType karTypeIn = kartyp[int(c)];
     switch (karTypeIn) {
-        case LETT: case DIGIT: case DOT:                        //c is a KAR, so we're building a string
+        case LETT: case DIGIT: case DOT:                                                //c is a KAR, so we're building a string
             s = "";
             while (isaC(c, {LETT, DIGIT, DOT})) {
                 s += c;
                 cursor++;
                 c = textIn[cursor];
             };
-            if (karTypeIn == DIGIT ) symIn.type = NUM; else symIn.type = LIT;
-            symIn.content = s;
-            cursor--;
+//            if (karTypeIn == DIGIT ) symIn.type = NUM; else symIn.type = LIT;           // todo add check on eg 12a4 (=error)
+            symIn.content = s; symIn.arity = 0;
+            cursor--;                                                                   // reposition before next char.
             break;
         case TIMES:
-            symIn.type = TimesDiv; symIn.opcode = 0; symIn.arity = 2;  //oMUL;                       //we have a separator
+            symIn.opcode = 0; symIn.arity = 2;                                          //oMUL
             break;
         case DIV:
-            symIn.type = TimesDiv; symIn.opcode = 1; symIn.arity = 2;  //oDIV;                      //we have a separator
+            symIn.opcode = 1; symIn.arity = 2;                                          //oDIV
             break;
         case PLUS:
-            if (isFirstSymbol) {symIn.type = CHS; symIn.opcode = 0;} //oCHS;}
+            if (isFirstSymbol) {symIn.opcode = 0; symIn.arity = 1;}                      //oCHS
             else if (isaC(textIn[cursor - 1], {TIMES, DIV, PLUS, MINUS, PAR_L, QUEST})) {
-                // we are not adding to the previous, this is a unary operator
-                symIn.type = CHS; symIn.opcode = 0; //oCHS;
-            } else {symIn.type = PlusMin; symIn.opcode = 2;} //oSUM;}
+                // this is a unary operator.
+                symIn.opcode = 0; symIn.arity = 1;                                      //////////////// arity?
+            } else { symIn.opcode = 2; symIn.arity = 2;}
             break;
         case MINUS:
-            if (isFirstSymbol) {symIn.type = CHS; symIn.opcode = 0; symIn.arity = 1; } //oCHS;}
+            if (isFirstSymbol) {symIn.opcode = 1; symIn.arity = 1; } //oCHS;}
             else if (isaC(textIn[cursor - 1], {TIMES, DIV, PLUS, MINUS, PAR_L, QUEST})) {
-                // we are not adding to the previous, this is a unary operator
-                symIn.type = CHS; symIn.opcode = 0;  symIn.arity = 1;  //oCHS;
-            } else {symIn.type = PlusMin; symIn.opcode = 3;} //oMIN;}
+                // this is a unary operator. We change the type to CHS
+                symIn.opcode = 0;  symIn.arity = 1;                                     //oCHS;
+            } else {symIn.opcode = 3; symIn.arity = 2;} //oMIN;}
             break;
         case LT:
-            symIn.type = COMPARE; symIn.opcode = 4; symIn.arity = 2; //oLT;
+            symIn.opcode = 4; symIn.arity = 2;                                          //oLT;
             break;
         case EQ:
-            symIn.type = COMPARE; symIn.opcode = 5; symIn.arity = 2;  //oEQ;
+            symIn.opcode = 5; symIn.arity = 2;                                          //oEQ;
             break;
         case GT:
-            symIn.type = COMPARE; symIn.opcode = 6; symIn.arity = 2;  //oGT;
+            symIn.opcode = 6; symIn.arity = 2;                                          //oGT;
             break;
         case QUEST:
-            symIn.type = ELV_Q; symIn.opcode = 0;   //oQUE;
+            symIn.opcode = 0;                                                           //oQUE;
             break;
         case COLON:
-            symIn.type = ELV_C; symIn.opcode = -1; symIn.arity = 13;
+            symIn.opcode = 0; symIn.arity = 3;                                        //oCOL
             break;
         default:
-            symIn.type = tokenType[kartyp[int(c)]];
-            symIn.opcode = -1;
             break;
     }
     isFirstSymbol = false;
@@ -99,15 +99,15 @@ vector<Token> parse1(){
         symIn = makeSymbol({});
 
 // in case of a "? XXX : YYY" construct we insert parentheses around the XXX part. this isolates the expression XXX
-        if (isa(symIn, {ELV_C})) {                                       // substitute '?(' for '?'
-            symList.push_back({BEXPE, ")", oCOL, -1, cursor});
+        if (isa(symIn, {COLON})) {                                       // substitute '?(' for '?'
+            symList.push_back({PAR_L, ")", -1, -1, cursor});
             };
         symList.push_back(symIn);
 //            symList.push_back({symIn.type, symIn.content, oNONE, -1, cursor});
-            if (isa(symIn, {ELV_Q})) {                                       // substitute '?(' for '?'
-                symList.push_back({BEXPS, "(", oQUE, -1, cursor});        //
+            if (isa(symIn, {QUEST})) {                                       // substitute '?(' for '?'
+                symList.push_back({PAR_L, "(", -1, -1, cursor});        //
             };
-        } while (symIn.type != EOT);
+        } while (symIn.type != EXCLA);
     return symList;
 }
 
