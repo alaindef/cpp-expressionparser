@@ -27,27 +27,34 @@ void reportElapsedTime(string msg){
 }
 
 #include <pass1.h>
-
 #include <pass2.h>
+#include <interpreter.h>
 
-
-
-Token tt = {VARI, 0, "haha", 0};        //test
 int main(int argc, char *argv[])
 {
     (void)(argc);(void)(argv);
     initDinges();
+    initOperators();
 
     //tests
     cout << "testing ... \n" << int(c) << endl;
 
+//    cout << "invoke: " << invoke(2,3, op_add) << endl;
 
-    textIn = "2+(12*(3<4 ?(4/2)*5:(17-5)*3))!";
+    cout << "invoke: " << op2[1](2,3) << endl;
+
+
+    textIn = "-2+(-a3<4 ?4*5:(17-5)*3)!";
+//    textIn = "(2+3)*((1<2) + (6-2)/2)!";
+//    textIn = "2*5!";
     cout << "textIn is: " << textIn << endl;
-    cout << "\nPASS 1 gives : "; parse1();
-    printVector(symList);
+    cout << "\nPASS 1 gives :\n"; parse1();
+    printPass2(symList, 4);
     cout << "\nPASS 2 says  : "; parse2();
-    printVector(symListOut);
+    printPass2(symListOut, 5);
+
+    calcandprint(symListOut);
+
     cout << "\n\nthe end"<< endl;
 
     return 0;

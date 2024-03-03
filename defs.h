@@ -1,58 +1,40 @@
 #ifndef DEFS_H
 #define DEFS_H
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 //  PASS 1 will scan the input test and generate a list of symbols (see PASS1)
 //    we will assign a type to each allowed character  .
 //    e.g. character 'h' (ascii 104)  is a LETT, character '0' (ascii 48 )is a DIGIT. character (40) is PAR_L (left parenthesis)
 //    the following are the possible character types:
-enum KarType {ETX,
-               LF,
-               TAB,
-               BLANK,
-               HASHT,
-               PAR_L,
-               PAR_R,
-               DOT,
-               TIMES,
-               DIV,
-               PLUS,
-               MINUS,
-               EQ,
-               GT,
-               LT,
-               COLON,
-               QUEST,   // we ignore this operator, becase ':' takes care of ternary, else QUESTION("[?]"),
-               LETT,
-               DIGIT,
-               CR,
-               OTHER,
-               EXCLA,
-               TEST};
+enum KarType
+    {ETX,   LF, TAB,    BLANK,  HASHT,  PAR_L,  PAR_R,  DOT,   TIMES,  DIV, PLUS,   MINUS,  LT, EQ, GT, QUEST,  COLON,  LETT,   DIGIT,  CR, OTHER,  EXCLA,  TEST};
 
-//PASS 2 will scan the output of PASS1 and generate a list of symbols
-enum TokenType {
-    // https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
-    // of https://en.wikipedia.org/wiki/Order_of_operations
-    COMMENT,
-    VARI,
-    LIT,                //literal
-    CHS,                // CHS "change sign " was OP_3
-    TimesDiv,           // * or /, according to precedence order - was OP5
-    PlusMin,            // + or -               -  was OP6
-    OP_16,              // like elvis
-    ELV_Q,
-    ELV_C,
-    BEXPS,
-    BEXPE,
-    EOT,
-    NONE}  ;
+
+//PASS 2 will scan the output of PASS1 and generate a list of tokens
+// precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
+//                          or  https://en.wikipedia.org/wiki/Order_of_operations
+enum TokenType
+    {COMMENT, VARI, LIT, NUM, CHS, TimesDiv, PlusMin, COMPARE, ELV_Q, ELV_C, BEXPS, BEXPE, EOT, NONE};
+
+// to go from KarType to TokenType we use an array:
+TokenType tokenType[32] =
+    {NONE,  NONE,   NONE,   NONE,   NONE,   BEXPS,  BEXPE,  NONE,   TimesDiv,   TimesDiv,   NONE,   NONE,   COMPARE,COMPARE,COMPARE,    ELV_C,  ELV_Q,  LIT,    NUM,    NONE,   NONE,   EOT,    NONE};
+//  {ETX,   LF,     TAB,    BLANK,  HASHT,  PAR_L,  PAR_R,  DOT,    TIMES,      DIV,        PLUS,   MINUS,  LT,     EQ,     GT,         QUEST,  COLON,  LETT,   DIGIT,  CR,     OTHER,  EXCLA,  TEST};
+// prettyPrint of TokenType:
+string ppTokenType[32] = {"com", "VAR", "LIT", "NUM", "CHS", "*/", "+-" , "CMPR", "?", ":", "(", ")", "EOT", "NON"};
+
+enum Opcode {oCHS, oMUL, oDIV, oSUM, oMIN, oLT, oEQ, oGT, oQUE, oCOL, oNONE};
+
+//codes         0     0     1     2     3    4    5    6     0    -1     -1
+//arity         1     2     2     2     2    2    2    2     3    -1     -1
 
 typedef struct {
     TokenType type;
-    int arity;
     string content;
+    int opcode;
+    int arity;
     int cursor;
 } Token;
 
@@ -91,7 +73,7 @@ void initDinges(){
     kartyp[63] = QUEST; KarPP[63] = "?";
 }
 
-//      finally our maain data structures:
+//      finally our main data structures:
 //  1. the input expression as a text string:
 string textIn= "";
 //  2. the output of PASS1 as a vector of symbols. it is also the input for PASS2.

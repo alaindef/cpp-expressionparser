@@ -1,7 +1,7 @@
 QT += core
 QT -= gui
 
-CONFIG += c++11
+CONFIG += c++17
 
 TARGET = expressionparser
 CONFIG += console
@@ -13,6 +13,7 @@ SOURCES += main.cpp
 
 HEADERS += \
     defs.h \
+    interpreter.h \
     pass1.h \
     pass2.h \
     utils.h

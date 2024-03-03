@@ -7,14 +7,11 @@ string textOut= "";
 void push(Token sym) {
     symListOut.push_back(sym);
     textOut += sym.content;
-    reportln("push >>> " + sym.content, 2);
 }
 
 Token nextSymbol(string from, vector<TokenType> expected){
-    if (symList.empty())
-        throw invalid_argument("from <$from>: symbols missing!");
-    Token next = symList.back();
-    symList.pop_back();
+    if (symList.empty()) throw invalid_argument("from <$from>: symbols missing!");
+    Token next = symList.back(); symList.pop_back();
     if (expected.empty()) return next;
     if (count(expected.begin(), expected.end(), next.type) > 0) return next;
     errorsPresent = true;
@@ -28,9 +25,9 @@ void bExpression();
 void factor() {
     //next symbol if success
     switch(symIn.type) {
-    case VARI: case LIT:
+    case VARI: case LIT: case NUM:
         push(symIn);                                                                        // push???
-        symIn = nextSymbol("factor", {TimesDiv, PlusMin, BEXPE, ELV_Q, EOT});
+        symIn = nextSymbol("factor", {TimesDiv, COMPARE, PlusMin, BEXPE, ELV_Q, EOT});
         break;
     default: bExpression();
         break;
@@ -41,15 +38,16 @@ void factor() {
 void term() {
     if (isa(symIn, {CHS})) {
         Token save = symIn;
-        symIn = nextSymbol("term", {VARI});
+        symIn = nextSymbol("term", {VARI,LIT,NUM});
         factor();
-        int code = 177;
-        if (save.content == "-") push(Token({CHS, 0,  "${code.toChar()}", symIn.cursor}));        // push???
+        char ch = 177;
+        if (save.content == "-") push(Token({CHS, "CHS" , oCHS, 1, symIn.cursor}));        // push???
+
     }
     factor();
-    while (isa(symIn, {TimesDiv})) {
+    while (isa(symIn, {TimesDiv, COMPARE})) {
         Token save = symIn;
-        symIn = nextSymbol("term", {VARI, BEXPS});
+        symIn = nextSymbol("term", {VARI,LIT,NUM, BEXPS});
         factor();
         push(save);                                                                         // push ???
     }
@@ -59,7 +57,7 @@ void expression(){
     term();
     while (isa(symIn, {PlusMin, ELV_Q, ELV_C})) {
         Token save = symIn;
-        symIn = nextSymbol("expression", {VARI, BEXPS});
+        symIn = nextSymbol("expression", {VARI,LIT,NUM, BEXPS});
         term();
         push(save);             //???
     }
@@ -68,9 +66,9 @@ void expression(){
 
 void bExpression() {
     if (isa(symIn, {BEXPS})) {
-        symIn = nextSymbol("bExpression", {VARI, BEXPS, CHS});
+        symIn = nextSymbol("bExpression", {VARI,LIT,NUM, BEXPS, CHS});
         expression();
-        symIn = nextSymbol("bExpression", {VARI, TimesDiv, PlusMin, BEXPS, BEXPE, ELV_Q, ELV_C, EOT});
+        symIn = nextSymbol("bExpression", {VARI,LIT,NUM, TimesDiv, COMPARE, PlusMin, BEXPS, BEXPE, ELV_Q, ELV_C, EOT});
     }
 };
 
@@ -94,7 +92,8 @@ vector<Token> parse2(){
         cout << "PARSE ERROR: ${e.message}" << endl;
     };
     if (!errorsPresent)
-        cout << "expression parser PASS1 ended succesfully\n ";
+        cout << "expression parser PASS2 ended succesfully\n ";
+    cout << endl;
     return symListOut;
 };
 
