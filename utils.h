@@ -5,7 +5,7 @@
 #include <defs.h>
 
 //int cursor = 0;
-Token symIn = {OTHER, "", -1, -1, 0};             // used in both pass1 and pass2
+Token symIn = {OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
 bool errorsPresent = false;
 
 bool isa(Token token, vector<TokenType> allowedTypes){
@@ -30,10 +30,6 @@ float op_eq(float x, float y){return x==y;}
 float op_gt(float x, float y){return x>y;}
 float op_elv(float x, float y, float z) {if (x) return y; else return z;}
 
-//float invoke(float x, float (*func) (float)) {return func(x);}
-//float invoke(float x, float y, float (*func) (float, float)) {return func(x,y);}
-//float invoke(float x, float y, float z, float (*func) (float, float,float)) {return func(x,y,z);}
-
 vector<function<float(float)>> op1;
 vector<function<float(float,float)>> op2;
 vector<function<float(float,float,float)>> op3;
@@ -50,20 +46,8 @@ void initOperators(){
     op3.push_back(op_elv);
 }
 
-
 // some printing stuff
-void printPass1(vector<Token> symList, int tab){
-    for (Token element : symList)
-        cout << setw(tab) << element.content << " ";
-    cout << endl;
-    for (Token element : symList)
-        cout << setw(tab) << ppTokenType[element.type] << " ";
-    cout << endl;
-}
-
-
-// some printing stuff
-void printPass2(vector<Token> symList, int tab){
+void printPass(vector<Token> symList, int tab){
     cout << "type  : ";
     for (Token element : symList)
         cout << setw(tab) << ppTokenType[element.type] << " ";
@@ -79,6 +63,14 @@ void printPass2(vector<Token> symList, int tab){
     cout << "arity : ";
     for (Token element : symList)
         cout << setw(tab) << element.arity << " ";
+    cout << endl;
+    cout << "prcd  : ";
+    for (Token element : symList)
+        cout << setw(tab) << element.precedence << " ";
+    cout << endl;
+    cout << "cursr : ";
+    for (Token element : symList)
+        cout << setw(tab) << element.cursor<< " ";
     cout << endl;
 }
 

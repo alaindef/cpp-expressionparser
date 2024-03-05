@@ -1,13 +1,26 @@
-expression		::= term	    		|   *{OP_6  term}	
-term			::= factor	    		|   *{OP_5  factor}
-factor			::= + unsignedfactor	| - unsignedfactor	| unsignedfactor
-unsignedfactor  ::= var         		| num           	|   bexpression
-bexpression     ::= LB expression RB
-OP_6            ::= + | -
-OP_5            ::= * | / | > | < | = | ? | :
-LB              ::= (
-RB              ::= )
+
 letter          ::= a | b | c | ....
 digit           ::= 1 | 2 | 3 | ...
 var             ::= letter | {letter | digit}
 num             ::= {digit} | {digit} . {digit}
+
+// the following defines the precedence, according to https://en.wikipedia.org/wiki/Order_of_operations
+op2				::= +			| -
+op3				::=	*			| /
+op4				::=	+			| -
+op6				::=	<			| <=		| >			|>=
+op7				::=	==			| !=
+op13			::=	?			| :
+op14			::=	=			|
+
+// 
+expr0 			::= var			| num					| expr1		ex:abc, 13, a2, (...)
+expr1			::= ( expr13 )														
+expr2			::= expr0		| op2 expr0							ex:+abc, -4, 5
+expr3			::= expr2		| expr2 op3 expr2					ex:a*4, -2*5, 2*-5, -1*(...)
+expr4			::= expr3		| expr3 op4 expr3					ex:a*4 + 3, a*4 + (...)
+expr6			::= expr4		| expr4 op6 expr4					ex:a*4 + 3 < 4
+expr7			::= expr6		| expr6 op7 expr6					ex:a*4 + 3 < 4 != 7
+expr13			::= expr7		| expr7 ? expr7 : exp7
+
+

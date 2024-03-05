@@ -6,7 +6,6 @@ float calc(vector<Token>& s){
     float v2;
     float v3;
     Token last = s.back(); s.pop_back();
-    if (last.content == "?") {last = s.back(); s.pop_back();};
     if (last.type == DIGIT) return stof(last.content);                                  // todo also LIT VARI?
     switch (last.arity){
         case 1: v1 =calc(s); return -v1;

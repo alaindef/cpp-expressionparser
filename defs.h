@@ -11,7 +11,6 @@ using namespace std;
 enum KarType
     {ETX,   LF, TAB,    BLANK,  HASHT,  PAR_L,  PAR_R,  DOT,   TIMES,  DIV, PLUS,   MINUS,  LT, EQ, GT, QUEST,  COLON,  LETT,   DIGIT,  CR, OTHER,  EXCLA,  TEST};
 
-
 //PASS 2 will scan the output of PASS1 and generate a list of tokens
 // precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
 //                          or  https://en.wikipedia.org/wiki/Order_of_operations
@@ -22,24 +21,18 @@ typedef KarType TokenType;
 // prettyPrint of TokenType:
 string ppTokenType[32] =     {"ETX",   "LF", "TAB",    "BLANK",  "HASHT",  "PAR_L",  "PAR_R",  "DOT",   "TIMES",  "DIV", "PLUS",   "MINUS",  "LT", "EQ", "GT", "QUEST",  "COLON",  "LETT",   "DIGIT",  "CR", "OTHER",  "EXCLA",  "TEST"};
 
-
-//              CHS   MUL   DIV   SUM   MIN   LT   EQ   GT   QUE   COL   NONE
-//opcodes         0     0     1     2     3    4    5    6     -1    0     -1
-//arity           1     2     2     2     2    2    2    2     -1    3     -1
-
 uint cursor = 0;
 typedef struct {
     TokenType type;
     string content;
     int opcode;
     int arity;
+    int precedence;
     uint cursor;
 } Token;
 
 KarType kartyp[256];    // type of each character
 string KarPP[256];      // string representation of each character
-
-//KarPP[1] = 2;
 
 void initDinges(){
     for (int j= 1; j<256; j++) {kartyp[j] = OTHER; KarPP[j] = "OTHER";};
@@ -77,8 +70,5 @@ string textIn= "";
 vector<Token> symList;
 //  3. the output of PASS2 as a vector of tokens
 vector<Token> symListOut;
-
-
-
 
 #endif // DEFS_H
