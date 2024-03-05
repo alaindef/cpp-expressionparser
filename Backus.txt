@@ -1,0 +1,13 @@
+expression		::= term	    		|   *{OP_6  term}	
+term			::= factor	    		|   *{OP_5  factor}
+factor			::= + unsignedfactor	| - unsignedfactor	| unsignedfactor
+unsignedfactor  ::= var         		| num           	|   bexpression
+bexpression     ::= LB expression RB
+OP_6            ::= + | -
+OP_5            ::= * | / | > | < | = | ? | :
+LB              ::= (
+RB              ::= )
+letter          ::= a | b | c | ....
+digit           ::= 1 | 2 | 3 | ...
+var             ::= letter | {letter | digit}
+num             ::= {digit} | {digit} . {digit}
