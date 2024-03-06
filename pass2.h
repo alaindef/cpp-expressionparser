@@ -31,25 +31,30 @@ void expr6();
 void expr7();
 void expr13();
 
-void expr(){expr13();}
+void expr(){
+    expr13();
+}
 
 void expr0(){
     if (isa(symIn, {LETT, DIGIT})){
         push(symIn);
-        symIn = nextSymbol("expr0", {TIMES, DIV, LT,EQ,GT, PLUS, MINUS, PAR_L, PAR_R, COLON, QUEST, EXCLA});
-    } else  expr1();
+        symIn = nextSymbol("expr0", {TIMES, DIV, LT,EQ,GT, PLUS, MINUS, PAR_L, PAR_R, COLON, QUEST, ETX});
+    } else
+        expr1();
 }
 
 void expr1(){
     if (isa(symIn, {PAR_L})) {
         symIn = nextSymbol("expr1", {LETT, DIGIT, PAR_L, PLUS, MINUS});
         expr13();
-        symIn = nextSymbol("bExpression", {PAR_R});
+        if (symIn.content != ")")
+            throw invalid_argument("received " + symIn.content);
+        symIn = nextSymbol("expr1", {});
     }
 }
 void expr2(){
     expr0();
-    if (symIn.precedence == 2){
+        if (symIn.precedence == 2){
         Token save = symIn;
         symIn = nextSymbol("expr2", {LETT, DIGIT, PAR_L, PLUS, MINUS});
         expr0();
@@ -62,7 +67,7 @@ void expr3(){
     if (symIn.precedence == 3){
         Token save = symIn;
         symIn = nextSymbol("expr3", {LETT, DIGIT, PAR_L, PLUS, MINUS});
-        expr2();
+        expr3();
         push(save);
     }
 }
@@ -72,7 +77,7 @@ void expr4(){
     if (symIn.precedence == 4){
         Token save = symIn;
         symIn = nextSymbol("expr4", {LETT, DIGIT, PAR_L, PLUS, MINUS});
-        expr3();
+        expr4();
         push(save);
     }
 }
@@ -82,7 +87,7 @@ void expr6(){
     if (symIn.precedence == 6){
         Token save = symIn;
         symIn = nextSymbol("expr6", {LETT, DIGIT, PAR_L, PLUS, MINUS});
-        expr4();
+        expr6();
         push(save);
     }
 }

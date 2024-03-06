@@ -42,13 +42,16 @@ int main(int argc, char *argv[])
 
 // test cases: uncomment 1 of them to try
 
-//    textIn = "(2+3)*((1<-2) + (6/2)!";
-//    textIn = "1+-2!";                       //not working yet !!!!!!
-//    textIn = "(6-2)!";
+//    textIn = "1<-2!";
+//    textIn = "(2+3)*(1<(-2)) + (6/2)!";
+//    textIn = "(2+3)*(1<-2) + (6/2)!";          //CALC CRASH
+//    textIn = "1+-2!";
+//    textIn = "6*2*4/5!";
+//    textIn = "(6)!";
+//        textIn = "(6)";
 //    textIn = "5*(-1 + (6-2)*2)!";
-    textIn = "2*3+5<13?777:888!";
-//    textIn = "0?1:0!";
-//    textIn = "2*-5!";
+    textIn = "2*3+5<1?777:((1<2 + (6/2))+17/4)";
+//    textIn = "2*-5+17*2-(45<2)!";
 //    textIn = "0?2:3!";
 //    textIn = "-1+(5<4 ?4*5:(17-5)*3)!";
 

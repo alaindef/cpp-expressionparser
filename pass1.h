@@ -8,7 +8,7 @@ char c;
 
 Token makeSymbol(vector<TokenType> expected){
     string s = "";
-    if (cursor >= textIn.length()) return symIn;
+    if (cursor >= textIn.length()) return Token{ETX,"",-1,-1,-1};
     c = textIn[cursor];
     if (isaC(c, {BLANK, TAB})) {
         cursor++;
@@ -42,15 +42,15 @@ Token makeSymbol(vector<TokenType> expected){
             break;
         case PLUS:
             if (isFirstSymbol) {symIn.opcode = 0; symIn.arity = 1; symIn.precedence = 2;}//oCHS
-            else if (isaC(textIn[cursor - 1], {TIMES,DIV,PLUS,MINUS,PAR_L,QUEST,COLON})) {
+            else if (isaC(textIn[cursor - 1], {TIMES,DIV,PLUS,MINUS,LT,EQ,GT,PAR_L,QUEST,COLON})) {
                 // this is a unary operator.
-                symIn.opcode = 0; symIn.arity = 1; symIn.precedence = 2;                                      //////////////// arity?
+                symIn.opcode = 0; symIn.arity = 1; symIn.precedence = 2;
             } else { symIn.opcode = 2; symIn.arity = 2; symIn.precedence = 4;}
             break;
         case MINUS:
             if (isFirstSymbol) {symIn.opcode = 1; symIn.arity = 1;  symIn.precedence = 2;} //oCHS;}
-            else if (isaC(textIn[cursor - 1], {TIMES,DIV,PLUS,MINUS,PAR_L,QUEST,COLON})) {
-                // this is a unary operator. We change the type to CHS
+            else if (isaC(textIn[cursor - 1], {TIMES,DIV,PLUS,MINUS,LT,EQ,GT,PAR_L,QUEST,COLON})) {
+                // this is a unary operator. We change the arity and precedence
                 symIn.opcode = 1;  symIn.arity = 1;  symIn.precedence = 2;                                     //oCHS;
             } else {symIn.opcode = 3; symIn.arity = 2; symIn.precedence = 4;}           //oMIN;}
             break;
@@ -98,7 +98,7 @@ vector<Token> parse1(){
         do {
         symIn = makeSymbol({});
         symList.push_back(symIn);
-        } while (symIn.type != EXCLA);
+        } while (symIn.type != ETX);
     return symList;
 }
 
