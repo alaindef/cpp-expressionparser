@@ -6,13 +6,13 @@
 bool isFirstSymbol=true;
 char c;
 
-Token makeSymbol(vector<TokenType> expected){
+Token makeSymbol(string textIn, TokenTypeList expected){
     string s = "";
     if (cursor >= textIn.length()) return Token{ETX,"",-1,-1,-1};
     c = textIn[cursor];
     if (isaC(c, {BLANK, TAB})) {
         cursor++;
-        return makeSymbol({});                                                          //makesymbol advances the cursor
+        return makeSymbol(textIn, {});                                                          //makesymbol advances the cursor
         }
 
     symIn.type = kartyp[int(c)];
@@ -21,7 +21,7 @@ Token makeSymbol(vector<TokenType> expected){
     symIn.arity   = -1;
     symIn.precedence = -1;
     symIn.cursor  = cursor;                                                             // not used for now
-    KarType karTypeIn = kartyp[int(c)];
+    TokenType karTypeIn = kartyp[int(c)];
     switch (karTypeIn) {
         case LETT: case DIGIT: case DOT:                                                //c is a KAR, so we're building a string
             s = "";
@@ -75,13 +75,15 @@ Token makeSymbol(vector<TokenType> expected){
     isFirstSymbol = false;
     cursor++;
     if (expected.empty()) return symIn;            //default, we do not complain
-    if (count(expected.begin(), expected.end(), symIn.type) > 0) return symIn;         //check on expected char is ok, no complaints
+    if (count(expected.begin(), expected.end(), symIn.type) > 0) return symIn;        //check on expected char is ok, no complaints
     errorsPresent = true;
-//        throw IllegalArgumentException(
-//            "SEPARATOR in line at cursor " +
+    string errors = "SEPARATOR in line at cursor " + to_string(cursor) ;
+        throw invalid_argument(errors
+//            "SEPARATOR in line at cursor " &
 //            "$cursor < ${textIn.substring(0, cursor)} > \n" +
 //            "     char=$c, symbol=${symIn.content}   ==> < ${expected.contentToString()} >\n"
-//            );
+// adf cpp problem
+            );
     return symIn;
 }
 
@@ -91,12 +93,12 @@ void clear1() {
     symList.clear();
 }
 
-vector<Token> parse1(){
+TokenList parse1(string textIn){
     clear1();
     cursor = 0;
     errorsPresent = false;
         do {
-        symIn = makeSymbol({});
+        symIn = makeSymbol(textIn, {});
         symList.push_back(symIn);
         } while (symIn.type != ETX);
     return symList;

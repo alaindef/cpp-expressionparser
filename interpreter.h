@@ -1,11 +1,12 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-float calc(vector<Token>& s){
-    float v1;
+float calc(TokenList& s){
+  float v1;
     float v2;
     float v3;
-    Token last = s.back(); s.pop_back();
+    Token last = s.back();
+    s.pop_back();
     if (last.type == DIGIT) return stof(last.content);                                  // todo also LIT VARI?
     switch (last.arity){
         case 1: v1 =calc(s); return -v1;
@@ -19,8 +20,9 @@ float calc(vector<Token>& s){
 }
 
 
- void calcandprint(vector<Token> s) {
-    cout << "RESULT ==> " << float(calc(s)) << endl;
+ void calcandprint(TokenList s) {
+        cout << "\nEVALUATION RESULT ==> " << float(calc(s)) << endl <<
+        "_______________________________________________________________________________" << endl;
 }
 
 #endif // INTERPRETER_H

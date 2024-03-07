@@ -8,12 +8,12 @@
 Token symIn = {OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
 bool errorsPresent = false;
 
-bool isa(Token token, vector<TokenType> allowedTypes){
+bool isa(Token token, TokenTypeList allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op
     return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
 }
 
-bool isaC(char Kar, vector<KarType> allowedTypes){
+bool isaC(char Kar, TokenTypeList allowedTypes){
     //    int found = find(allowedTypes.begin(), allowedTypes.end(), int(Kar));
     int cnt = count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
     return(cnt > 0);
@@ -47,7 +47,7 @@ void initOperators(){
 }
 
 // some printing stuff
-void printPass(vector<Token> symList, int tab){
+void printPass(TokenList symList, int tab){
     cout << "type  : ";
     for (Token element : symList)
         cout << setw(tab) << ppTokenType[element.type] << " ";

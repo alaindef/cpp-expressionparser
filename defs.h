@@ -8,18 +8,17 @@ using namespace std;
 //    we will assign a type to each allowed character  .
 //    e.g. character 'h' (ascii 104)  is a LETT, character '0' (ascii 48 )is a DIGIT. character (40) is PAR_L (left parenthesis)
 //    the following are the possible character types:
-enum KarType
+enum TokenType
     {ETX,   LF, TAB,    BLANK,  HASHT,  PAR_L,  PAR_R,  DOT,   TIMES,  DIV, PLUS,   MINUS,  LT, EQ, GT, QUEST,  COLON,  LETT,   DIGIT,  CR, OTHER,  EXCLA,  TEST};
+
+typedef vector<TokenType> TokenTypeList;
 
 //PASS 2 will scan the output of PASS1 and generate a list of tokens
 // precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
 //                          or  https://en.wikipedia.org/wiki/Order_of_operations
-//enum TokenType
-//    {COMMENT, VARI, LIT, NUM, CHS, TimesDiv, PlusMin, COMPARE, ELV_Q, ELV_C, BEXPS, BEXPE, EOT, NONE};
-typedef KarType TokenType;
 
 // prettyPrint of TokenType:
-string ppTokenType[32] =     {"ETX",   "LF", "TAB",    "BLANK",  "HASHT",  "PAR_L",  "PAR_R",  "DOT",   "TIMES",  "DIV", "PLUS",   "MINUS",  "LT", "EQ", "GT", "QUEST",  "COLON",  "LETT",   "DIGIT",  "CR", "OTHER",  "EXCLA",  "TEST"};
+string ppTokenType[32] ={"ETX", "LF", "TAB", "BLANK", "HASHT", "PAR_L", "PAR_R", "DOT", "TIMES", "DIV", "PLUS", "MINUS", "LT", "EQ", "GT", "QUEST", "COLON", "LETT", "DIGIT", "CR", "OTHER", "EXCLA",  "TEST"};
 
 uint cursor = 0;
 typedef struct {
@@ -30,8 +29,10 @@ typedef struct {
     int precedence;
     uint cursor;
 } Token;
+typedef vector<Token> TokenList;
 
-KarType kartyp[256];    // type of each character
+TokenType kartyp[256];    // type of each character
+
 string KarPP[256];      // string representation of each character
 
 void initDinges(){
@@ -63,12 +64,10 @@ void initDinges(){
 }
 
 //      finally our main data structures:
-//  1. the input expression as a text string:
-string textIn= "";
 //  2. the output of PASS1 as a vector of symbols. it is also the input for PASS2.
 //      symbols of type Token, the element "content" can be TODO
-vector<Token> symList;
+TokenList symList;
 //  3. the output of PASS2 as a vector of tokens
-vector<Token> symListOut;
+TokenList symListOut;
 
 #endif // DEFS_H
