@@ -4,39 +4,12 @@
 #include <iomanip>
 #include <defs.h>
 
-Token symIn = {OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
+Token symIn = {t_OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
 bool errorsPresent = false;
 
 bool isa(Token token, TokenTypeList allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op
     return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
-}
-
-// some operator functions
-float op_chs(float x){return -x;}
-float op_mul(float x, float y){return (x*y);}
-float op_div(float x, float y){return (x/y);}
-float op_add(float x, float y){return (x+y);}
-float op_sub(float x, float y){return (x-y);}
-float op_lt(float x, float y){return x<y;}
-float op_eq(float x, float y){return x==y;}
-float op_gt(float x, float y){return x>y;}
-float op_elv(float x, float y, float z) {if (x) return y; else return z;}
-
-vector<function<float(float)>> op1;
-vector<function<float(float,float)>> op2;
-vector<function<float(float,float,float)>> op3;
-
-void initOperators(){
-    op1.push_back(op_chs);
-    op2.push_back(op_mul);
-    op2.push_back(op_div);
-    op2.push_back(op_add);
-    op2.push_back(op_sub);
-    op2.push_back(op_lt);
-    op2.push_back(op_eq);
-    op2.push_back(op_gt);
-    op3.push_back(op_elv);
 }
 
 // some printing stuff
