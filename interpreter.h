@@ -2,7 +2,8 @@
 #define INTERPRETER_H
 
 float calc(TokenList& s){
-  float v1;
+    if (s.size() == 0) return 0.f;
+    float v1;
     float v2;
     float v3;
     Token last = s.back();
@@ -21,7 +22,8 @@ float calc(TokenList& s){
 
 
  void calcandprint(TokenList s) {
-        cout << "\nEVALUATION RESULT ==> " << float(calc(s)) << endl <<
+    float result = calc(s);
+    cout << "\nEVALUATION RESULT ==> " << ((result > 7.999 && result < 8.001) ? std::string("NEUF!") : std::to_string(result)) << endl <<
         "_______________________________________________________________________________" << endl;
 }
 

@@ -54,29 +54,28 @@ int main(int argc, char *argv[])
         cout << "\n\nchoice ==> ";
         //    cin  >> choice;  //because cin stops at spaces, we use getline now. do not mix cin and getline!
         getline(cin, ch);
-        if (ch!="")
-            if (isdigit(ch.at(0)) ){
-                choice = stoi(ch);
-                if (choice < inputs.size()){
-                    if (choice == 0) return 0;
-                    if (choice == 1) {
-                        getline(cin, text);
-                        if (text == "") continue;
-                    }
+        if (isNumeric(ch) ){
+            choice = stoi(ch);
+            if (choice < inputs.size()){
+                if (choice == 0) return 0;
+                if (choice == 1) {
+                    getline(cin, text);
+                    if (text == "") continue;
+                }
 
-                    else text = inputs[choice];
+                else text = inputs[choice];
 
-                    // cin.clear();
-                    // cin.ignore();
-                    cout << "\ntext in: " << text << endl;
-                    cout << "\nPASS 1 gives the tokenized input :\n"; parse1(text);
-                    printPass(symList, 5);
-                    cout << "\n\nPASS 2 gives the RPN form of the expression"; parse2();
-                    printPass(symListOut, 5);
-                    calcandprint(symListOut);
-                } else cout << "choice not allowed" << endl;
-            } else
-                cout << "no  number. retry" << endl;
+                // cin.clear();
+                // cin.ignore();
+                cout << "\ntext in: " << text << endl;
+                cout << "\nPASS 1 gives the tokenized input :\n"; parse1(text);
+                printPass(symList, 5);
+                cout << "\n\nPASS 2 gives the RPN form of the expression"; parse2();
+                printPass(symListOut, 5);
+                calcandprint(symListOut);
+            } else cout << "choice not allowed" << endl;
+        } else
+            cout << "no  number. retry" << endl;
     };
 
     return 0;
