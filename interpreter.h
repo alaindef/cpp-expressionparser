@@ -6,37 +6,46 @@
 int ass_result = 0;
 
 // some operator functions
-float op_chs(float x){return -x;}
-float op_mul(float x, float y){return (x*y);}
-float op_div(float x, float y){return (x/y);}
-float op_add(float x, float y){return (x+y);}
-float op_sub(float x, float y){return (x-y);}
-float op_lt(float x, float y){return x<y;
-}
-float op_eq(float x, float y){return x==y;}
-float op_gt(float x, float y){return x>y;}
-float op_ass(float x, float y){
+float fun_pas(float x){return +x;}                  // opcode 0 arity 1 precedence 2
+float fun_chs(float x){return -x;}                  // opcode 1 arity 1 precedence 2
+
+float fun_mul(float x, float y){return (x*y);}      // opcode 0 arity 2 precedence 3
+float fun_div(float x, float y){
+    float res = ((float)x/(float)y);
+    return res;
+}      // opcode 1 arity 2 precedence 3
+float fun_add(float x, float y){return (x+y);}      // opcode 2 arity 2 precedence 4
+float fun_sub(float x, float y){return (x-y);}      // opcode 3 arity 2 precedence 4
+float fun_lt(float x, float y){return x<y;}         // opcode 4 arity 2 precedence 6
+float fun_gt(float x, float y){return x>y;}         // opcode 5 arity 2 precedence 6
+float fun_eq(float x, float y){return x==y;}        // opcode 6 arity 2 precedence 7
+float fun_ass(float x, float y){
     ass_result = y;
     cout << "assignment result. a = " << ass_result<< endl;
-    return ass_result;}
-float op_elv(float x, float y, float z) {if (x) return y; else return z;}
+    return ass_result;}                             // opcode 7 arity 2 precedence 14
 
+float fun_elv(float x, float y, float z){
+    if (x) return y; else return z;}                // opcode 0 arity 3 precedence 13
 
-vector<function<float(float)>> op1;
-vector<function<float(float,float)>> op2;
-vector<function<float(float,float,float)>> op3;
+vector<function<float(float)>> funList1;                // arity 1
+vector<function<float(float,float)>> funList2;          // arity 2
+vector<function<float(float,float,float)>> funList3;    // arity 3
 
 void initOperators(){
-    op1.push_back(op_chs);          // opcode 0 arity 1
-    op2.push_back(op_mul);          // opcode 0 arity 2
-    op2.push_back(op_div);          // opcode 1 arity 2
-    op2.push_back(op_add);          // opcode 2 arity 2
-    op2.push_back(op_sub);          // opcode 3 arity 2
-    op2.push_back(op_lt);           // opcode 4 arity 2
-    op2.push_back(op_eq);           // opcode 5 arity 2
-    op2.push_back(op_gt);           // opcode 6 arity 2
-    op2.push_back(op_ass);          // opcode 7 arity 2
-    op3.push_back(op_elv);          // opcode 0 arity 3
+    // functions ar pushed in the order of their opcode
+    funList1.push_back(fun_pas);
+    funList1.push_back(fun_chs);
+
+    funList2.push_back(fun_mul);
+    funList2.push_back(fun_div);
+    funList2.push_back(fun_add);
+    funList2.push_back(fun_sub);
+    funList2.push_back(fun_lt);
+    funList2.push_back(fun_gt);
+    funList2.push_back(fun_eq);
+    funList2.push_back(fun_ass);
+
+    funList3.push_back(fun_elv);
 }
 
 float calc(TokenList& s){
@@ -45,26 +54,26 @@ float calc(TokenList& s){
     float v2;
     float v3;
 
-    int res;
+    float res;
 
+    // Token last = s.pop_back();
     Token last = s.back();
     s.pop_back();
     if (last.type == t_DIGIT) return stof(last.content);                                  // todo also LIT VARI?
     switch (last.arity){
-        case 1: v1 =calc(s); return -v1;
-        case 2:
-            v1 =calc(s);
-            v2 =calc(s);
-            res = op2[last.opcode](v2,v1);
-            return res;
-        case 3:
-            v1 =calc(s); v2 =calc(s); v3 =calc(s);
-            op3[last.opcode](v1,v2,v3);
-            if (v3 > 0.5) return v2; else return v1;
+    case 1: v1 =calc(s); return -v1;
+    case 2:
+        v1 =calc(s);
+        v2 =calc(s);
+        res = funList2[last.opcode](v2,v1);
+        return res;
+    case 3:
+        v1 =calc(s); v2 =calc(s); v3 =calc(s);
+        funList3[last.opcode](v1,v2,v3);
+        if (v3 > 0.5) return v2; else return v1;
     }
-        return -99999;
+    return -99999;
 }
-
 
  void calcandprint(TokenList s) {
     float result = calc(s);

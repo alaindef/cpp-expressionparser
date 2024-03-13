@@ -58,10 +58,10 @@ Token makeSymbol(string textIn, TokenTypeList expected){
     symIn.opcode  = -1;
     symIn.arity   = -1;
     symIn.precedence = -1;
-    symIn.cursor  = cursor;                                                             // not used for now
+    symIn.cursor  = cursor;
     TokenType karTypeIn = kartyp[int(c)];
     switch (karTypeIn) {
-    case t_LETT: case t_DIGIT: case t_DOT:                                                //c is a KAR, so we're building a string
+    case t_LETT: case t_DIGIT: case t_DOT:                                          //c is a KAR, so we're building a string
         s = "";
         while (isaC(c, {t_LETT, t_DIGIT, t_DOT})) {
             s += c;
@@ -73,46 +73,46 @@ Token makeSymbol(string textIn, TokenTypeList expected){
         cursor--;                                                                   // reposition before next char.
         break;
     case t_TIMES:
-        symIn.opcode = 0; symIn.arity = 2;  symIn.precedence = 3;                   //oMUL
+        symIn.opcode = 0; symIn.arity = 2;  symIn.precedence = 3;
         break;
     case t_DIV:
-        symIn.opcode = 1; symIn.arity = 2;  symIn.precedence = 3;                    //oDIV
+        symIn.opcode = 1; symIn.arity = 2;  symIn.precedence = 3;
         break;
     case t_PLUS:
-        if (cursor == 0) {symIn.opcode = 0; symIn.arity = 1; symIn.precedence = 2;}//oCHS
+        if (cursor == 0) {symIn.opcode = 0; symIn.arity = 1; symIn.precedence = 2;}
         else if (isaC(textIn[cursor - 1], {t_TIMES,t_DIV,t_PLUS,t_MINUS,t_LT,t_EQ,t_GT,t_PAR_L,t_QUEST,t_COLON})) {
             // this is a unary operator.
             symIn.opcode = 0; symIn.arity = 1; symIn.precedence = 2;
         } else { symIn.opcode = 2; symIn.arity = 2; symIn.precedence = 4;}
         break;
     case t_MINUS:
-        if (cursor == 0) {symIn.opcode = 1; symIn.arity = 1;  symIn.precedence = 2;} //oCHS;}
+        if (cursor == 0) {symIn.opcode = 1; symIn.arity = 1;  symIn.precedence = 2;}
         else if (isaC(textIn[cursor - 1], {t_TIMES,t_DIV,t_PLUS,t_MINUS,t_LT,t_EQ,t_GT,t_PAR_L,t_QUEST,t_COLON})) {
             // this is a unary operator. We change the arity and precedence
-            symIn.opcode = 1;  symIn.arity = 1;  symIn.precedence = 2;                                     //oCHS;
-        } else {symIn.opcode = 3; symIn.arity = 2; symIn.precedence = 4;}           //oMIN;}
+            symIn.opcode = 1;  symIn.arity = 1;  symIn.precedence = 2;
+        } else {symIn.opcode = 3; symIn.arity = 2; symIn.precedence = 4;}
         break;
     case t_LT:
-        symIn.opcode = 4; symIn.arity = 2; symIn.precedence = 6;                    //oLT;
+        symIn.opcode = 4; symIn.arity = 2; symIn.precedence = 6;
+        break;
+    case t_GT:
+        symIn.opcode = 5; symIn.arity = 2; symIn.precedence = 6;
         break;
     case t_EQ:
         //c is "=", so we check on second "="
         if (kartyp[int(textIn[cursor+1])] == t_EQ){
-            symIn.opcode = 5; symIn.arity = 2; symIn.precedence = 7;                // "=="
+            symIn.opcode = 6; symIn.arity = 2; symIn.precedence = 7;                // "=="
             symIn.content = "==";
             cursor++;
         }else {
-        symIn.opcode = 7; symIn.arity = 2; symIn.precedence = 14;                    // "="
+        symIn.opcode = 7; symIn.arity = 2; symIn.precedence = 14;                   // "="
         }
         break;
-    case t_GT:
-        symIn.opcode = 6; symIn.arity = 2; symIn.precedence = 6;                    //oGT;
-        break;
     case t_QUEST:
-        symIn.opcode = 0; symIn.arity = 0; symIn.precedence = 13;                                                           //oQUE;
+        symIn.opcode = 0; symIn.arity = 0; symIn.precedence = 13;                   // this will be skipped in pass2
         break;
     case t_COLON:
-        symIn.opcode = 0; symIn.arity = 3; symIn.precedence = 13;                                        //oCOL
+        symIn.opcode = 0; symIn.arity = 3; symIn.precedence = 13;
         break;
     default:
         break;
