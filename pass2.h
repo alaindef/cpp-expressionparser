@@ -8,11 +8,9 @@
 
 // although pass2 needs far less tokentypes than the types from pass1, we will reuse the definition of pass1 and work with that
 
-string textOut= "";
 
 void push(Token sym) {
     symListOut.push_back(sym);
-    textOut += sym.content;
 }
 
 Token nextSymbol(string from, TokenTypeList expected){
@@ -112,12 +110,11 @@ void expr13(){
     if (symIn.precedence == 13){
         Token save = symIn;
         symIn = nextSymbol("expr13", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
-        expr7();
-//        push(save);                                                                   // no need, ":" is ternary, will take care
+        expr7();                                                                // no need to push "?", ":" is ternary, will take care
         save = symIn;
         symIn = nextSymbol("expr13", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr7();
-        push(save);                                                                                                                                      // for now, should be silenced
+        push(save);
     }
 }
 
@@ -137,15 +134,9 @@ void expr(){
     expr14();
 }
 
-void clear2() {
-    symListOut.clear();
-    // cursor = 0;
-    textOut = "";
-}
-
 TokenList parse2(){
     reverse(symList.begin(), symList.end());
-    clear2();
+    symListOut.clear();
     // cursor = 0;
     try {
         symIn = nextSymbol("parse", {});
