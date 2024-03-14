@@ -38,8 +38,8 @@ typedef vector<Token> TokenList;
 //      finally our main data structures:
 //  1. the output of PASS1 as a vector of symbols. it is also the input for PASS2.
 //      symbols of type Token, the element "content" can be TODO
-TokenList symList;
+//TokenList symList;
 //  2. the output of PASS2 as a vector of tokens
-TokenList symListOut;
+//TokenList symListOut;
 
 #endif // DEFS_H

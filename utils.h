@@ -4,10 +4,9 @@
 #include <iomanip>
 #include <defs.h>
 
-Token symIn = {t_OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
-bool errorsPresent = false;
+//Token symIn = {t_OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
 
-bool isa(Token token, TokenTypeList allowedTypes){
+bool isa(const Token& token, const std::vector<TokenType>& allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op
     return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
 }

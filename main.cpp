@@ -74,11 +74,18 @@ int main(int argc, char *argv[])
                 // cin.clear();
                 // cin.ignore();
                 cout << "\ntext in: " << text << endl;
-                cout << "\nPASS 1 gives the tokenized input :\n"; parse1(text);
-                printPass(symList, 5);
-                cout << "\n\nPASS 2 gives the RPN form of the expression"; parse2();
-                printPass(symListOut, 5);
-                calcandprint(symListOut);
+                cout << "\nPASS 1 gives the tokenized input :\n";
+
+                std::vector<Token> tokens = tokenize(text);
+                printPass(tokens, 5);
+
+                Pass2 pass2(tokens);
+                cout << "\n\nPASS 2 gives the RPN form of the expression";
+
+                std::vector<Token> tokensRPN = pass2.parse2();
+                printPass(tokensRPN, 5);
+                calcandprint(tokensRPN);
+
             } else cout << "choice not allowed" << endl;
         } else
             cout << "no  number. retry" << endl;
