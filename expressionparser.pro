@@ -9,12 +9,14 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    Tokenizer.cpp \
+    pass2.cpp
 
 HEADERS += \
+    Tokenizer.h \
     defs.h \
     interpreter.h \
-    pass1.h \
     pass2.h \
     utils.h
 

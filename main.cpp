@@ -1,28 +1,23 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <limits>
-#include <sstream>
 #include <vector>
-#include <ctime>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <algorithm>        // count function
 
 #include <defs.h>          // global definitions
 #include <utils.h>         // utilities
 
 using namespace std;
 
-#include <pass1.h>
+#include <Tokenizer.h>
 #include <pass2.h>
 #include <interpreter.h>
 
 int main(int argc, char *argv[])
 {
     (void)(argc);(void)(argv);
-    initDinges();
+
     initOperators();
 
     string text = "";
@@ -48,7 +43,7 @@ int main(int argc, char *argv[])
                              "(1<2 + (6/2))+17/4",
                              "2*-5+17*2-(45<2)"};
 
-    uint choice = 0;
+    uint32_t choice = 0;
     string ch = "";
 
     while (true) {
@@ -56,7 +51,7 @@ int main(int argc, char *argv[])
         cin.ignore();
         cout << "\nchoose:         -- choose 0 to exit\n"
                 "\n1. enter expression";
-        for (uint i = 2; i<inputs.size(); i++) cout << "\n" << i << ". " << inputs[i] ;
+        for (uint32_t i = 2; i<inputs.size(); i++) cout << "\n" << i << ". " << inputs[i] ;
         cout << "\n\nchoice ==> ";
         //    cin  >> choice;  //because cin stops at spaces, we use getline now. do not mix cin and getline!
         getline(cin, ch);
@@ -76,7 +71,8 @@ int main(int argc, char *argv[])
                 cout << "\ntext in: " << text << endl;
                 cout << "\nPASS 1 gives the tokenized input :\n";
 
-                std::vector<Token> tokens = tokenize(text);
+                Tokenizer tokenizer;
+                std::vector<Token> tokens = tokenizer.tokenize(text);
                 printPass(tokens, 5);
 
                 Pass2 pass2(tokens);

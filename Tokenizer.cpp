@@ -1,16 +1,11 @@
-#ifndef PASS1_H
-#define PASS1_H
-#include <defs.h>
+#include "Tokenizer.h"
+#include <iostream>
+#include <algorithm>
 
-//  PASS 1 will scan the input test and generate a list of symbols
+using namespace std;
 
-TokenType kartyp[256];    // type of each character
-
-//uint cursor = 0;
-string KarPP[256];      // string representation of each character
-bool errorsPresent = false;
-
-void initDinges(){
+Tokenizer::Tokenizer()
+{
     for (int j= 1; j<256; j++) {kartyp[j] = t_OTHER; KarPP[j] = "OTHER";};
     for (int j= 48; j<58; j++) {kartyp[j] = t_DIGIT; KarPP[j] = "D";};
     for (int j= 65; j<91; j++) {kartyp[j] = t_LETT ; KarPP[j] = "L";};
@@ -38,13 +33,31 @@ void initDinges(){
     kartyp[63] = t_QUEST; KarPP[63] = "?";
 }
 
+std::vector<Token> Tokenizer::tokenize(string textIn)
+{
+    std::vector<Token> tokens;
+    uint32_t cursor = 0;
+    errorsPresent = false;
+    Token tk;
+    do {
+        tk = makeToken(textIn, cursor, {});
+        if (errorsPresent){
+            cout<<"ERROR at cursor " << cursor;// << " : "<<errors<<"\n\n";
+            break;
+        }
+        tokens.push_back(tk);
+    } while (tk.type != t_ETX);
+    return tokens;
+}
 
-bool isaC(char Kar, std::vector<TokenType> allowedTypes){
-    int cnt = count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
+bool Tokenizer::isaC(char Kar, std::vector<TokenType> allowedTypes)
+{
+    int cnt = std::count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
     return(cnt > 0);
 }
 
-Token makeToken(const string& textIn, int& cursor, std::vector<TokenType> expected){
+
+Token Tokenizer::makeToken(const string& textIn, uint32_t& cursor, std::vector<TokenType> expected){
     string s = "";
     while (cursor < textIn.length() && std::isspace(textIn[cursor])) cursor++;
     if (cursor >= textIn.length()) return Token{t_ETX,"",-1,-1,-1};
@@ -53,14 +66,14 @@ Token makeToken(const string& textIn, int& cursor, std::vector<TokenType> expect
     Token tk;
     char c;
     c = textIn[cursor];
-    tk.type = kartyp[c];
-    tk.content = KarPP[c];                                                      // pretty print
+    tk.type = kartyp[(int)c];
+    tk.content = KarPP[(int)c];                                                      // pretty print
     tk.opcode  = -1;
     tk.arity   = -1;
     tk.precedence = -1;
     tk.cursor  = cursor;
 
-    switch (kartyp[c]) {
+    switch (kartyp[(int)c]) {
     case t_LETT: case t_DIGIT: case t_DOT:                                          //c is a KAR, so we're building a string
         s = "";
         while (isaC(c, {t_LETT, t_DIGIT, t_DOT})) {
@@ -107,7 +120,7 @@ Token makeToken(const string& textIn, int& cursor, std::vector<TokenType> expect
             tk.content = "==";
             cursor++;
         }else {
-        tk.opcode = 7; tk.arity = 2; tk.precedence = 14;                   // "="
+            tk.opcode = 7; tk.arity = 2; tk.precedence = 14;                   // "="
         }
         break;
     case t_QUEST:
@@ -132,27 +145,3 @@ Token makeToken(const string& textIn, int& cursor, std::vector<TokenType> expect
                            );
     return tk;
 }
-
-/*void clear() {
-    cursor = 0;
-    errorsPresent = false;
-    symList.clear();
-}*/
-
-std::vector<Token> tokenize(string textIn){
-    std::vector<Token> tokens;
-    int cursor = 0;
-    errorsPresent = false;    
-    Token tk;
-    do {
-        tk = makeToken(textIn, cursor, {});
-        if (errorsPresent){
-            cout<<"ERROR at cursor " << cursor;// << " : "<<errors<<"\n\n";
-            break;
-        }
-        tokens.push_back(tk);
-    } while (tk.type != t_ETX);
-    return tokens;
-}
-
-#endif // PASS1_H

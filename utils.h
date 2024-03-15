@@ -1,48 +1,49 @@
+#pragma once
 #ifndef UTILS_H
 #define UTILS_H
-#include <stdio.h>
+#include <iostream>
 #include <iomanip>
 #include <defs.h>
+#include <algorithm>
+#include <vector>
 
-//Token symIn = {t_OTHER, "", -1, -1, 0, 0};             // used in both pass1 and pass2
-
-bool isa(const Token& token, const std::vector<TokenType>& allowedTypes){
+inline bool isa(const Token& token, const std::vector<TokenType>& allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op
-    return(count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
+    return(std::count(allowedTypes.begin(), allowedTypes.end(), token.type) > 0);
 }
 
 // some printing stuff
-void printPass(TokenList symList, int tab){
-    cout << "type  : ";
-    for (Token element : symList)
-        cout << setw(tab) << ppTokenType[element.type] << " ";
-    cout << endl;
-    cout << "cont  : ";
-    for (Token element : symList)
-        cout << setw(tab) << element.content << " ";
-    cout << endl;
-    cout << "opcode: ";
-    for (Token element : symList)
-        cout << setw(tab) << element.opcode << " ";
-    cout << endl;
-    cout << "arity : ";
-    for (Token element : symList)
-        cout << setw(tab) << element.arity << " ";
-    cout << endl;
-    cout << "prcd  : ";
-    for (Token element : symList)
-        cout << setw(tab) << element.precedence << " ";
-    cout << endl;
-    cout << "cursr : ";
-    for (Token element : symList)
-        cout << setw(tab) << element.cursor<< " ";
-    cout << endl;
+inline void printPass(const std::vector<Token>& symList, int tab){
+    std::cout << "type  : ";
+    for (const Token& element : symList)
+        std::cout << std::setw(tab) << TokenToString(element.type) << " ";
+    std::cout << std::endl;
+    std::cout << "cont  : ";
+    for (const Token& element : symList)
+        std::cout << std::setw(tab) << element.content << " ";
+    std::cout << std::endl;
+    std::cout << "opcode: ";
+    for (const Token& element : symList)
+        std::cout << std::setw(tab) << element.opcode << " ";
+    std::cout << std::endl;
+    std::cout << "arity : ";
+    for (const Token& element : symList)
+        std::cout << std::setw(tab) << element.arity << " ";
+    std::cout << std::endl;
+    std::cout << "prcd  : ";
+    for (const Token& element : symList)
+        std::cout << std::setw(tab) << element.precedence << " ";
+    std::cout << std::endl;
+    std::cout << "cursr : ";
+    for (const Token& element : symList)
+        std::cout << std::setw(tab) << element.cursor<< " ";
+    std::cout << std::endl;
 }
 
 inline bool isNumeric(const std::string& s)
 {
     if (s.length() == 0) return false;
-    for (int i = 0; i < s.length(); ++i)
+    for (uint32_t i = 0; i < s.length(); ++i)
     {
         if ((s[i] >= '0' && s[i] <= '9')
             || s[i] == ' '
