@@ -11,12 +11,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     Tokenizer.cpp \
-    pass2.cpp
+    rpnizer.cpp
 
 HEADERS += \
     Tokenizer.h \
     defs.h \
     interpreter.h \
-    pass2.h \
+    rpnizer.h \
     utils.h
 

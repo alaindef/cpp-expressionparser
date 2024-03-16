@@ -11,19 +11,19 @@
 using namespace std;
 
 #include <Tokenizer.h>
-#include <pass2.h>
+#include <rpnizer.h>
 #include <interpreter.h>
 
 int main(int argc, char *argv[])
 {
     (void)(argc);(void)(argv);
 
+
     initOperators();
 
     string text = "";
 
     vector<string> inputs = {"","type it yourself",
-                             "0?2:3",
                              "0?222:3",
                              "4/5",
                              "2<3",
@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
                              "2==3",
                              "a=3",
                              "a=14+3",
-                             "a=14==3+3",
                              "a=14==14*2",
+                             "1*2+3*4+5",
                              "(2+3)*(1<(-2)) + (6/2)",
                              "1+-2",
                              "6*2*4/5",
@@ -76,9 +76,9 @@ int main(int argc, char *argv[])
                 printPass(tokens, 5);
 
                 Pass2 pass2(tokens);
-                cout << "\n\nPASS 2 gives the RPN form of the expression";
+                cout << "\n\nPASS 2 gives the RPN form of the expression:\n";
 
-                std::vector<Token> tokensRPN = pass2.parse2();
+                std::vector<Token> tokensRPN = pass2.toRPN();
                 printPass(tokensRPN, 5);
                 calcandprint(tokensRPN);
 

@@ -10,11 +10,11 @@ class Pass2
     {
 public:
     Pass2(std::vector<Token> pTokens) : tokens(pTokens){}
-    std::vector<Token>& parse2();
+    std::vector<Token>& toRPN();
 
 private:
     std::vector<Token> tokens;
-    int tokenidx = 0;
+    int cursor = 0;
     std::vector<Token> tokensout;
     Token nextToken(const std::string& from, std::vector<TokenType> expected);
 

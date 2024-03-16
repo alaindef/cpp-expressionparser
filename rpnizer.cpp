@@ -1,4 +1,4 @@
-#include "pass2.h"
+#include "rpnizer.h"
 #include "defs.h"
 #include <iostream>
 #include <vector>
@@ -7,12 +7,12 @@
 #include "utils.h"
 using namespace std;
 
-std::vector<Token>& Pass2::parse2()
+std::vector<Token>& Pass2::toRPN()
 {
     tokensout.clear();
     try {
-        tokenidx = 0;
-        Token tk = nextToken("parse2", {});
+        cursor = 0;
+        Token tk = nextToken("toRPN", {});
         expr(tk);
     } catch (const exception& e) {
         cout << "\n\n!!! PARSE ERROR:" << e.what() << endl<< endl;;
@@ -23,8 +23,8 @@ std::vector<Token>& Pass2::parse2()
 Token Pass2::nextToken(const std::string &from, std::vector<TokenType> expected)
 {
     // expected: the list of possible TokenTypes. it is filled in by the calling function
-    if (tokenidx >= tokens.size()) throw invalid_argument("symbols missing!");
-    Token next = tokens[tokenidx++];
+    if (cursor >= tokens.size()) throw invalid_argument("symbols missing!");
+    Token next = tokens[cursor++];
     if (expected.empty()) return next;
     if (count(expected.begin(), expected.end(), next.type) > 0) return next;
     // error:
@@ -118,7 +118,8 @@ void Pass2::expr13(Token& tk){
 }
 
 void Pass2::expr14(Token& tk){
-    Token save = tokens.back();
+    // Token save = tokens.back();
+    Token save = tokens[cursor];
     if (isa(tk, {t_LETT}) &(save.precedence == 14)){
         tokensout.push_back(tk);
         tk = nextToken("expr14", {t_EQ});

@@ -14,5 +14,5 @@ private:
     bool errorsPresent = false;
 
     bool isaC(char Kar, std::vector<TokenType> allowedTypes);
-    Token makeToken(const std::string& textIn, uint32_t& cursor, std::vector<TokenType> expected);;
+    Token makeToken(const std::string& textIn, uint32_t& cursor, std::vector<TokenType> expected);
 };

@@ -63,7 +63,7 @@ float calc(std::vector<Token>& tokenlist){
 
     Token last = tokenlist.back();
     tokenlist.pop_back();
-    if (last.type == t_DIGIT) return stof(last.content);                                  // todo also LIT VARI?
+    if (last.type == t_DIGIT) return stof(last.content);                                  // todo also LIT VARI? test arity 0
     switch (last.arity){
     case 1:
         v1 =calc(tokenlist);
@@ -72,6 +72,7 @@ float calc(std::vector<Token>& tokenlist){
         v1 =calc(tokenlist);
         v2 =calc(tokenlist);
         res = funList2[last.opcode](v2,v1);
+        cout << last.content << endl;
         return res;
     case 3:
         v1 =calc(tokenlist);
