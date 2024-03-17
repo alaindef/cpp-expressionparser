@@ -33,7 +33,9 @@ int main(int argc, char *argv[])
                              "a=3",
                              "a=14+3",
                              "a=14==14*2",
-                             "1*2+3*4+5",
+                             "1*2+3/4",
+                             "3*(2+9)",
+                             "(1*2)+(3/4-(5-6))",
                              "(2+3)*(1<(-2)) + (6/2)",
                              "1+-2",
                              "6*2*4/5",
@@ -48,6 +50,7 @@ int main(int argc, char *argv[])
 
     while (true) {
         cout << "press ENTER to continue";
+
         cin.ignore();
         cout << "\nchoose:         -- choose 0 to exit\n"
                 "\n1. enter expression";

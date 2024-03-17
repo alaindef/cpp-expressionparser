@@ -7,6 +7,7 @@
 #include <functional>
 #include <iostream>
 
+#include <string>
 
 
 
@@ -53,6 +54,11 @@ void initOperators(){
     funList3.push_back(fun_elv);
 }
 
+vector<string> report={""};
+const string pp_arity[4] = {"LITTERAL", "UNARY expr", "BINARY expr", "TERNARY expr"};
+string level = "";
+const string level_inc = "   ";
+
 float calc(std::vector<Token>& tokenlist){
     if (tokenlist.size() == 0) return 0.f;
     float v1;
@@ -61,31 +67,42 @@ float calc(std::vector<Token>& tokenlist){
 
     float res;
 
+    level += level_inc;
+
     Token last = tokenlist.back();
     tokenlist.pop_back();
-    if (last.type == t_DIGIT) return stof(last.content);                                  // todo also LIT VARI? test arity 0
     switch (last.arity){
+    case 0:
+        res =stof(last.content);
+        break;
     case 1:
         v1 =calc(tokenlist);
-        return -v1;
+        res = -v1;
+        break;
     case 2:
         v1 =calc(tokenlist);
         v2 =calc(tokenlist);
         res = funList2[last.opcode](v2,v1);
-        cout << last.content << endl;
-        return res;
+        break;
     case 3:
         v1 =calc(tokenlist);
         v2 =calc(tokenlist);
         v3 =calc(tokenlist);
         funList3[last.opcode](v1,v2,v3);
-        if (v3 > 0.5) return v2; else return v1;
+        if (v3 > 0.5) res = v2; else res = v1;
+        break;
     }
-    return -99999;
+    report.push_back(level + pp_arity[last.arity] + " op " + last.content + " \n");
+    level = level.substr(level_inc.size(), level.size());
+    return res;
 }
 
 void calcandprint(std::vector<Token> s) {
+    report={""};
+    std::cout << "\nkind: very kind\n body:\n";
     float result = calc(s);
+    reverse(report.begin(),report.end());
+    for (string el:report) cout << el;
     std::cout << "\nEVALUATION RESULT ==> " << ((result > 7.999 && result < 8.001) ? std::string("NEUF!") : std::to_string(result)) << std::endl <<
         "_______________________________________________________________________________" << std::endl;
 }
