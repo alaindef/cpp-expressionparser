@@ -7,7 +7,8 @@ class Tokenizer
 {
 public:
     Tokenizer();
-    std::vector<Token> tokenize(std::string textIn);
+    TokenList tokenize(std::string textIn);
+
 private:
     TokenType kartyp[256];    // type of each character
     std::string KarPP[256];      // string representation of each character

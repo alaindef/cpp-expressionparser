@@ -7,7 +7,17 @@
 #include "utils.h"
 using namespace std;
 
-std::vector<Token>& Pass2::toRPN()
+void pushToken(Token tk, RPNTokenList& out ){
+    RPNToken newRPNToken;
+    newRPNToken.content = tk.content;
+    newRPNToken.opcode  = tk.opcode;
+    newRPNToken.arity   = tk.arity;
+    newRPNToken.cursor  = tk.cursor;
+
+    out.push_back(newRPNToken);
+};
+
+std::vector<RPNToken>& RPNizer::RPNizer::toRPN()
 {
     tokensout.clear();
     try {
@@ -20,7 +30,7 @@ std::vector<Token>& Pass2::toRPN()
     return tokensout;
 }
 
-Token Pass2::nextToken(const std::string &from, std::vector<TokenType> expected)
+Token RPNizer::nextToken(const std::string &from, std::vector<TokenType> expected)
 {
     // expected: the list of possible TokenTypes. it is filled in by the calling function
     if (cursor >= tokens.size()) throw invalid_argument("symbols missing!");
@@ -37,15 +47,15 @@ Token Pass2::nextToken(const std::string &from, std::vector<TokenType> expected)
     return next;
 }
 
-void Pass2::expr0(Token& tk){
+void RPNizer::expr0(Token& tk){
     if (isa(tk, {t_LETT, t_DIGIT})){
-        tokensout.push_back(tk);
+        pushToken(tk, tokensout);
         tk = nextToken("expr0", {t_TIMES, t_DIV, t_LT,t_EQ,t_GT, t_PLUS, t_MINUS, t_PAR_L, t_PAR_R, t_COLON, t_QUEST, t_ETX});
     } else
         expr1(tk);
 }
 
-void Pass2::expr1(Token& tk){
+void RPNizer::expr1(Token& tk){
     if (isa(tk, {t_PAR_L})) {
         tk = nextToken("expr1", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr13(tk);
@@ -54,57 +64,57 @@ void Pass2::expr1(Token& tk){
         tk = nextToken("expr1", {});
     }
 }
-void Pass2::expr2(Token& tk){
+void RPNizer::expr2(Token& tk){
     expr0(tk);
     if (tk.precedence == 2){
         Token save = tk;
         tk = nextToken("expr2", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr0(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     }
 }
 
-void Pass2::expr3(Token& tk){
+void RPNizer::expr3(Token& tk){
     expr2(tk);
     if (tk.precedence == 3){
         Token save = tk;
         tk = nextToken("expr3", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr3(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     }
 }
 
-void Pass2::expr4(Token& tk){
+void RPNizer::expr4(Token& tk){
     expr3(tk);
     if (tk.precedence == 4){
         Token save = tk;
         tk = nextToken("expr4", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr4(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     }
 }
 
-void Pass2::expr6(Token& tk){
+void RPNizer::expr6(Token& tk){
     expr4(tk);
     if (tk.precedence == 6){
         Token save = tk;
         tk = nextToken("expr6", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr6(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     }
 }
 
-void Pass2::expr7(Token& tk){                                                                           //TODO !!!
+void RPNizer::expr7(Token& tk){                                                                           //TODO !!!
     expr6(tk);
     if (tk.precedence == 7){
         Token save = tk;
         tk = nextToken("expr7", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS,t_EQ});
         expr7(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     }
 }
 
-void Pass2::expr13(Token& tk){
+void RPNizer::expr13(Token& tk){
     expr7(tk);
     if (tk.precedence == 13){
         Token save = tk;
@@ -113,23 +123,23 @@ void Pass2::expr13(Token& tk){
         save = tk;
         tk = nextToken("expr13", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr7(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     }
 }
 
-void Pass2::expr14(Token& tk){
+void RPNizer::expr14(Token& tk){
     // Token save = tokens.back();
     Token save = tokens[cursor];
     if (isa(tk, {t_LETT}) &(save.precedence == 14)){
-        tokensout.push_back(tk);
+        pushToken(tk, tokensout);
         tk = nextToken("expr14", {t_EQ});
         tk = nextToken("expr14", {t_LETT, t_DIGIT, t_PAR_L, t_PLUS, t_MINUS});
         expr13(tk);
-        tokensout.push_back(save);
+        pushToken(save, tokensout);
     } else
         expr13(tk);
 }
 
-void Pass2::expr(Token& tk){
+void RPNizer::expr(Token& tk){
     expr14(tk);
 }

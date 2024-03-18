@@ -6,6 +6,8 @@
 #include <defs.h>
 #include <algorithm>
 #include <vector>
+#include "rpnizer.h"
+#include "defs.h"
 
 inline bool isa(const Token& token, const std::vector<TokenType>& allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op
@@ -36,6 +38,26 @@ inline void printPass(const std::vector<Token>& symList, int tab){
     std::cout << std::endl;
     std::cout << "cursr : ";
     for (const Token& element : symList)
+        std::cout << std::setw(tab) << element.cursor<< " ";
+    std::cout << std::endl;
+}
+
+
+inline void printRPN(const RPNTokenList& symList, int tab){
+    std::cout << "cont  : ";
+    for (const RPNToken& element : symList)
+        std::cout << std::setw(tab) << element.content << " ";
+    std::cout << std::endl;
+    std::cout << "opcode: ";
+    for (const RPNToken& element : symList)
+        std::cout << std::setw(tab) << element.opcode << " ";
+    std::cout << std::endl;
+    std::cout << "arity : ";
+    for (const RPNToken& element : symList)
+        std::cout << std::setw(tab) << element.arity << " ";
+    std::cout << std::endl;
+    std::cout << "cursr : ";
+    for (const RPNToken& element : symList)
         std::cout << std::setw(tab) << element.cursor<< " ";
     std::cout << std::endl;
 }

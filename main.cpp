@@ -10,6 +10,7 @@
 
 using namespace std;
 
+#include "pass0.h"
 #include <Tokenizer.h>
 #include <rpnizer.h>
 #include <interpreter.h>
@@ -45,8 +46,11 @@ int main(int argc, char *argv[])
                              "(1<2 + (6/2))+17/4",
                              "2*-5+17*2-(45<2)"};
 
+
     uint32_t choice = 0;
     string ch = "";
+
+    int a = 1;              //test 0 ==> pass0 else calc
 
     while (true) {
         cout << "press ENTER to continue";
@@ -58,36 +62,42 @@ int main(int argc, char *argv[])
         cout << "\n\nchoice ==> ";
         //    cin  >> choice;  //because cin stops at spaces, we use getline now. do not mix cin and getline!
         getline(cin, ch);
-        if (isNumeric(ch) ){
-            choice = stoi(ch);
-            if (choice < inputs.size()){
-                if (choice == 0) return 0;
-                if (choice == 1) {
-                    getline(cin, text);
-                    if (text == "") continue;
-                }
+        if (ch!="")
+            if (isNumeric(ch) ){
+                choice = stoi(ch);
+                if (choice < inputs.size()){
+                    if (choice == 0) return 0;
+                    if (choice == 1) {
+                        getline(cin, text);
+                        if (text == "") continue;
+                    }
 
-                else text = inputs[choice];
+                    else text = inputs[choice];
+                    cout << "\ntext in: " << text << endl;
 
-                // cin.clear();
-                // cin.ignore();
-                cout << "\ntext in: " << text << endl;
-                cout << "\nPASS 1 gives the tokenized input :\n";
+                    if (a == 0){
+                        pass0 p0;
+                        p0.tokenize(text);
+                    }
 
-                Tokenizer tokenizer;
-                std::vector<Token> tokens = tokenizer.tokenize(text);
-                printPass(tokens, 5);
+                    else{
+                        cout << "\nPASS 1 gives the tokenized input :\n";
 
-                Pass2 pass2(tokens);
-                cout << "\n\nPASS 2 gives the RPN form of the expression:\n";
+                        Tokenizer tokenizer;
+                        std::vector<Token> tokens = tokenizer.tokenize(text);
+                        printPass(tokens, 5);
 
-                std::vector<Token> tokensRPN = pass2.toRPN();
-                printPass(tokensRPN, 5);
-                calcandprint(tokensRPN);
+                        RPNizer pass2(tokens);
+                        cout << "\n\nPASS 2 gives the RPN form of the expression:\n";
 
-            } else cout << "choice not allowed" << endl;
-        } else
-            cout << "no  number. retry" << endl;
+                        RPNTokenList tokensRPN = pass2.toRPN();
+                        printRPN(tokensRPN, 5);
+                        calcandprint(tokensRPN);
+                    }
+
+                } else cout << "choice not allowed" << endl;
+            } else
+                cout << "no  number. retry" << endl;
     };
 
     return 0;

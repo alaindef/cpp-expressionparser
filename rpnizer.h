@@ -6,16 +6,18 @@
 //                          or  https://en.wikipedia.org/wiki/Order_of_operations
 
 // although pass2 needs far less tokentypes than the types from pass1, we will reuse the definition of pass1 and work with that
-class Pass2
-    {
+class RPNizer
+{
 public:
-    Pass2(std::vector<Token> pTokens) : tokens(pTokens){}
-    std::vector<Token>& toRPN();
+
+    RPNizer(std::vector<Token> pTokens) : tokens(pTokens){}
+    RPNTokenList& toRPN();
 
 private:
-    std::vector<Token> tokens;
-    int cursor = 0;
-    std::vector<Token> tokensout;
+    typedef std::vector<Token>      TokenList;
+
+    TokenList tokens;
+    RPNTokenList tokensout;
     Token nextToken(const std::string& from, std::vector<TokenType> expected);
 
     void expr(Token& tk);
@@ -28,4 +30,6 @@ private:
     void expr7(Token& tk);
     void expr13(Token& tk);
     void expr14(Token& tk);
+
+    int cursor = 0;
 };

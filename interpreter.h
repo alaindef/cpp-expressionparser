@@ -59,7 +59,7 @@ const string pp_arity[4] = {"LITTERAL", "UNARY expr", "BINARY expr", "TERNARY ex
 string level = "";
 const string level_inc = "   ";
 
-float calc(std::vector<Token>& tokenlist){
+float calc(RPNTokenList& tokenlist){
     if (tokenlist.size() == 0) return 0.f;
     float v1;
     float v2;
@@ -67,9 +67,9 @@ float calc(std::vector<Token>& tokenlist){
 
     float res;
 
-    level += level_inc;
+    level += level_inc;                                                             // increase indentation
 
-    Token last = tokenlist.back();
+    RPNToken last = tokenlist.back();
     tokenlist.pop_back();
     switch (last.arity){
     case 0:
@@ -92,12 +92,12 @@ float calc(std::vector<Token>& tokenlist){
         if (v3 > 0.5) res = v2; else res = v1;
         break;
     }
-    report.push_back(level + pp_arity[last.arity] + " op " + last.content + " \n");
-    level = level.substr(level_inc.size(), level.size());
+    report.push_back(level + pp_arity[last.arity] + " op " + last.content + " \n"); // report AST
+    level = level.substr(level_inc.size(), level.size());                           // decrease indentation
     return res;
 }
 
-void calcandprint(std::vector<Token> s) {
+void calcandprint(RPNTokenList s) {
     report={""};
     std::cout << "\nkind: very kind\n body:\n";
     float result = calc(s);

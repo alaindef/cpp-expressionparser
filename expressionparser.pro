@@ -10,15 +10,15 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
+    pass0.cpp \
     Tokenizer.cpp \
-    ast.cpp \
     rpnizer.cpp
 
 HEADERS += \
-    Tokenizer.h \
-    ast.h \
     defs.h \
-    interpreter.h \
+    pass0.h \
+    Tokenizer.h \
     rpnizer.h \
+    interpreter.h \
     utils.h
 
