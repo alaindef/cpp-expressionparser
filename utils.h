@@ -3,11 +3,10 @@
 #define UTILS_H
 #include <iostream>
 #include <iomanip>
-#include <defs.h>
 #include <algorithm>
 #include <vector>
-#include "rpnizer.h"
 #include "defs.h"
+#include "rpnizer.h"
 
 inline bool isa(const Token& token, const std::vector<TokenType>& allowedTypes){
     //    check if the symbol sym is one of the symbols in the list op

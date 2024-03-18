@@ -1,6 +1,7 @@
 #include "Tokenizer.h"
 #include <iostream>
 #include <algorithm>
+#include "utils.h"
 
 using namespace std;
 
@@ -50,12 +51,6 @@ std::vector<Token> Tokenizer::tokenize(string textIn)
     return tokens;
 }
 
-bool Tokenizer::isaC(char Kar, std::vector<TokenType> allowedTypes)
-{
-    int cnt = std::count(allowedTypes.begin(), allowedTypes.end(), kartyp[int(Kar)]);
-    return(cnt > 0);
-}
-
 
 Token Tokenizer::makeToken(const string& textIn, uint32_t& cursor, std::vector<TokenType> expected){
     string s = "";
@@ -81,8 +76,14 @@ Token Tokenizer::makeToken(const string& textIn, uint32_t& cursor, std::vector<T
             cursor++;
             c = textIn[cursor];
         };
-        //            if (kartyp[c] == DIGIT ) tk.type = NUM; else tk.type = LIT;           // todo add check on eg 12a4 (=error)
-        tk.content = s;
+        if (isNumeric(s) ) {
+            tk.opcode = 0;
+            tk.content = s;
+        }
+        else {
+            tk.opcode = 1;
+            tk.content = s;
+        }
         tk.arity = 0;
         tk.precedence = 0;
         cursor--;                                                                   // reposition before next char.

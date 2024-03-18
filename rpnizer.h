@@ -10,13 +10,11 @@ class RPNizer
 {
 public:
 
-    RPNizer(std::vector<Token> pTokens) : tokens(pTokens){}
+    RPNizer(TokenList pTokens) : inputTokenList(pTokens){}
     RPNTokenList& toRPN();
 
 private:
-    typedef std::vector<Token>      TokenList;
-
-    TokenList tokens;
+    TokenList inputTokenList;
     RPNTokenList tokensout;
     Token nextToken(const std::string& from, std::vector<TokenType> expected);
 
@@ -31,5 +29,5 @@ private:
     void expr13(Token& tk);
     void expr14(Token& tk);
 
-    int cursor = 0;
+    uint cursor = 0;
 };

@@ -15,7 +15,7 @@ void pushToken(Token tk, RPNTokenList& out ){
     newRPNToken.cursor  = tk.cursor;
 
     out.push_back(newRPNToken);
-};
+}
 
 std::vector<RPNToken>& RPNizer::RPNizer::toRPN()
 {
@@ -33,8 +33,9 @@ std::vector<RPNToken>& RPNizer::RPNizer::toRPN()
 Token RPNizer::nextToken(const std::string &from, std::vector<TokenType> expected)
 {
     // expected: the list of possible TokenTypes. it is filled in by the calling function
-    if (cursor >= tokens.size()) throw invalid_argument("symbols missing!");
-    Token next = tokens[cursor++];
+    if (cursor >= inputTokenList.size())
+        throw invalid_argument("symbols missing!");
+    Token next = inputTokenList[cursor++];
     if (expected.empty()) return next;
     if (count(expected.begin(), expected.end(), next.type) > 0) return next;
     // error:
@@ -128,8 +129,8 @@ void RPNizer::expr13(Token& tk){
 }
 
 void RPNizer::expr14(Token& tk){
-    // Token save = tokens.back();
-    Token save = tokens[cursor];
+    // Token save = inputTokenList.back();
+    Token save = inputTokenList[cursor];
     if (isa(tk, {t_LETT}) &(save.precedence == 14)){
         pushToken(tk, tokensout);
         tk = nextToken("expr14", {t_EQ});

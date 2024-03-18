@@ -13,14 +13,16 @@ using namespace std;
 #include "pass0.h"
 #include <Tokenizer.h>
 #include <rpnizer.h>
-#include <interpreter.h>
+// #include <interpreter.h>
+
+#include "calculator.h"
 
 int main(int argc, char *argv[])
 {
     (void)(argc);(void)(argv);
 
 
-    initOperators();
+    // initOperators();
 
     string text = "";
 
@@ -71,7 +73,6 @@ int main(int argc, char *argv[])
                         getline(cin, text);
                         if (text == "") continue;
                     }
-
                     else text = inputs[choice];
                     cout << "\ntext in: " << text << endl;
 
@@ -92,7 +93,10 @@ int main(int argc, char *argv[])
 
                         RPNTokenList tokensRPN = pass2.toRPN();
                         printRPN(tokensRPN, 5);
-                        calcandprint(tokensRPN);
+
+                        Calculator calc;
+
+                        calc.calcandprint(tokensRPN);
                     }
 
                 } else cout << "choice not allowed" << endl;
