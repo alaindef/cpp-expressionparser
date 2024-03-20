@@ -24,7 +24,6 @@ typedef std::vector<Token> TokenList;
 
 
 
-
 //PASS 2 will scan the output of PASS1 and generate a list of tokens
 // precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
 //                          or  https://en.wikipedia.org/wiki/Order_of_operations

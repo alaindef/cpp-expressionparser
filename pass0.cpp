@@ -8,6 +8,28 @@
 
 using namespace std;
 
+void pass0::defineLanguage(){
+    languageMap={
+        {"+", "|+|" },
+        {"-", "|-|"},
+        {"*", "|*|"},
+        {"/", "|/|"},
+        // {"+", "|+|"},
+        // {"-", "|-|"},
+        {"<", "|<|"},
+        {"<=", "|<=|"},
+        {">", "|>|"},
+        {">=", "|>=|"},
+        {"==", "|==|"},
+        {"!=", "|!=|"},
+        {"?", "|?|"},
+        {":", "|:|"},
+        {"=", "|=|"},   // must come after "=="
+        {"(", "|(|"},
+        {")", "|)|"}
+    };
+}
+
 pass0::pass0() {
     //list of allowed symbols
     language.push_back("+"); keywords.push_back("[0.+]");
@@ -30,13 +52,23 @@ pass0::pass0() {
     langsize = language.size();
 }
 
+pair<string, string> pass0::findKeyword(const map<string, string>& language, const string& s) {
+    for (const auto& entry : language) {
+        const string& key = entry.first;
+        if (s.compare(0, key.size(), key) == 0) {
+            return entry; // Return a pointer to the pair (key, value)
+        }
+    }
+    return {"", "-1"}; // Return an empty pair if no match is found
+}
+
 
 void pass0::tokenize(string textIn){
     string out = "";
     uint cursor = 0;
     cout << "\nin = " << textIn <<endl;
 
-    int lsize = language.size();
+    int languageSize = language.size();
     string next = "";
     string blank = " ";
     int keywordFoundAt = -1;
@@ -46,7 +78,7 @@ void pass0::tokenize(string textIn){
             cursor++; continue;
         }
         uint increment = 1;
-        for (int i=0; i<lsize; i++){
+        for (int i=0; i<languageSize; i++){
             string keyword = language[i];
             uint sz = keyword.size();
             if (keyword == textIn.substr(cursor, sz)){      //keyword found
@@ -55,6 +87,8 @@ void pass0::tokenize(string textIn){
                 break;
             }
         }
+        std::pair<std::string, string> result =
+            findKeyword(pass0::languageMap,textIn);
         if (keywordFoundAt < 0){
             next += textIn[cursor];
             cursor += increment;

@@ -35,10 +35,10 @@ inline void printPass(const std::vector<Token>& symList, int tab){
     for (const Token& element : symList)
         std::cout << std::setw(tab) << element.precedence << " ";
     std::cout << std::endl;
-    std::cout << "cursr : ";
-    for (const Token& element : symList)
-        std::cout << std::setw(tab) << element.cursor<< " ";
-    std::cout << std::endl;
+    // std::cout << "cursr : ";
+    // for (const Token& element : symList)
+    //     std::cout << std::setw(tab) << element.cursor<< " ";
+    // std::cout << std::endl;
 }
 
 
@@ -55,10 +55,10 @@ inline void printRPN(const RPNTokenList& symList, int tab){
     for (const RPNToken& element : symList)
         std::cout << std::setw(tab) << element.arity << " ";
     std::cout << std::endl;
-    std::cout << "cursr : ";
-    for (const RPNToken& element : symList)
-        std::cout << std::setw(tab) << element.cursor<< " ";
-    std::cout << std::endl;
+    // std::cout << "cursr : ";
+    // for (const RPNToken& element : symList)
+    //     std::cout << std::setw(tab) << element.cursor<< " ";
+    // std::cout << std::endl;
 }
 
 inline bool isNumeric(const std::string& s)

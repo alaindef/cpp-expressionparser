@@ -1,9 +1,13 @@
+#pragma once
 #include "Tokenizer.h"
 #include <iostream>
 #include <algorithm>
 #include "utils.h"
 
 using namespace std;
+
+
+string varsglob[100];
 
 Tokenizer::Tokenizer()
 {
@@ -34,7 +38,7 @@ Tokenizer::Tokenizer()
     kartyp[63] = t_QUEST; KarPP[63] = "?";
 }
 
-std::vector<Token> Tokenizer::tokenize(string textIn)
+TokenList Tokenizer::tokenize(string textIn)
 {
     std::vector<Token> tokens;
     uint32_t cursor = 0;
@@ -51,6 +55,9 @@ std::vector<Token> Tokenizer::tokenize(string textIn)
     return tokens;
 }
 
+string Tokenizer::getVarAdress(string var, string vars[] ){
+    return "2";
+}
 
 Token Tokenizer::makeToken(const string& textIn, uint32_t& cursor, std::vector<TokenType> expected){
     string s = "";
@@ -82,7 +89,8 @@ Token Tokenizer::makeToken(const string& textIn, uint32_t& cursor, std::vector<T
         }
         else {
             tk.opcode = 1;
-            tk.content = s;
+            tk.content = Tokenizer::getVarAdress(s, varsglob);
+            // tk.content = "";
         }
         tk.arity = 0;
         tk.precedence = 0;

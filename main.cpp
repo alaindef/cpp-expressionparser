@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
                              "2==3",
                              "a=3",
                              "a=14+3",
+                             "a=2*b+3",
                              "a=14==14*2",
                              "1*2+3/4",
                              "3*(2+9)",
@@ -52,7 +53,7 @@ int main(int argc, char *argv[])
     uint32_t choice = 0;
     string ch = "";
 
-    int a = 1;              //test 0 ==> pass0 else calc
+    int a = 0;              //test 0 ==> pass0 else calc
 
     while (true) {
         cout << "press ENTER to continue";

@@ -24,4 +24,7 @@ private:
         return(cnt > 0);
     }
     Token makeToken(const std::string& textIn, uint32_t& cursor, std::vector<TokenType> expected);
+
+    string getVarAdress(string var, string vars[] );
+
 };

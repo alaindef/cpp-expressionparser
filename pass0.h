@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PASS0_H
 #define PASS0_H
 
@@ -7,6 +8,7 @@
 #include <iomanip>
 #include <stdio.h>
 #include <vector>
+#include <map>;
 
 // #include "defs.h"
 
@@ -35,6 +37,16 @@ public:
     uint langsize;
     // vector<Token>  tokens;
     void match(string s, string &out);
+
+    // typedef std::map<std::string, string> kvPair;
+    // typedef std::map<std::string, string> MapType;
+
+
+    typedef map<std::string, string> MapType;
+    MapType languageMap;
+    MapType::iterator mapIter;
+    void defineLanguage();
+    std::pair<string, string>  findKeyword(const std::map<std::string, string>& language, const string& s);
 };
 
 #endif // PASS0_H
