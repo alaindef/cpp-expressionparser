@@ -5,104 +5,89 @@
 #include <stdio.h>
 #include <algorithm>
 #include <cstring>
+#include "defs.h"
+#include <vector>
 
 using namespace std;
 
-void pass0::defineLanguage(){
-    languageMap={
-        {"+", "|+|" },
-        {"-", "|-|"},
-        {"*", "|*|"},
-        {"/", "|/|"},
-        // {"+", "|+|"},
-        // {"-", "|-|"},
-        {"<", "|<|"},
-        {"<=", "|<=|"},
-        {">", "|>|"},
-        {">=", "|>=|"},
-        {"==", "|==|"},
-        {"!=", "|!=|"},
-        {"?", "|?|"},
-        {":", "|:|"},
-        {"=", "|=|"},   // must come after "=="
-        {"(", "|(|"},
-        {")", "|)|"}
+void pass0::defineKeywords(){
+
+
+    keywords={
+        {"*",   {0,  2,  3}},
+        {"/",   {1,  2,  3}},
+        {"+",   {2,  2,  4}},               //alternative {0, 1, 2}
+        {"-",   {3,  2,  4}},               //alternative {1, 1, 2}
+        {"<",   {4,  2,  6}},
+        {"<=",  {5,  2,  6}},
+        {">",   {6,  2,  6}},
+        {">=",  {7,  2,  6}},
+        {"==",  {8,  2,  7}},
+        {"!=",  {9,  2,  7}},
+        {"?",   {15, 0, 13}},
+        {":",   {16, 3, 13}},
+        {"(",   {20, 0,  0}},
+        {")",   {21, 0,  0}}
     };
+    // keywords.insert({"=",   {18, 9, 14}});
 }
 
 pass0::pass0() {
-    //list of allowed symbols
-    language.push_back("+"); keywords.push_back("[0.+]");
-    language.push_back("-"); keywords.push_back("[1.-]");
-    language.push_back("*"); keywords.push_back("[2.*]");
-    language.push_back("/"); keywords.push_back("[3./]");
-    // language.push_back("+"); keywords.push_back("[4.+]");
-    // language.push_back("-"); keywords.push_back("[5.-]");
-    language.push_back("<"); keywords.push_back("[6.<]");
-    language.push_back("<="); keywords.push_back("[7.<=]");
-    language.push_back(">"); keywords.push_back("[8.>]");
-    language.push_back(">="); keywords.push_back("[9.>=]");
-    language.push_back("=="); keywords.push_back("[10.==]");
-    language.push_back("!="); keywords.push_back("[11.!=]");
-    language.push_back("?"); keywords.push_back("[12.?]");
-    language.push_back(":"); keywords.push_back("[13.:]");
-    language.push_back("="); keywords.push_back("[14.=]");   // must come after "=="
-    language.push_back("("); keywords.push_back("[15.(]");
-    language.push_back(")"); keywords.push_back("[16.)]");
-    langsize = language.size();
+    pass0::defineKeywords();
 }
 
-pair<string, string> pass0::findKeyword(const map<string, string>& language, const string& s) {
-    for (const auto& entry : language) {
-        const string& key = entry.first;
-        if (s.compare(0, key.size(), key) == 0) {
-            return entry; // Return a pointer to the pair (key, value)
-        }
+void pass0::printMap(){                         // for debugging
+    cout << "\nmap is =====> ";
+    for (auto entry = pass0::keywords.rbegin(); entry != pass0::keywords.rend(); ++entry){
+        cout << entry->first << " " << entry->second.opcode << " " << entry->second.arity << " " << entry->second.precedence << "\n" ;
     }
-    return {"", "-1"}; // Return an empty pair if no match is found
+    cout << "\n";
 }
 
+pass0::KeyPairType pass0::findKeyword(const map<string, Token0>& keys, const string& s) {
+    // ordered Map stores "==" always after "=", "==" would never be found. so we loop through the map in reverse
+    for (auto entry = keys.rbegin(); entry != keys.rend(); ++entry){
+        const string& key = entry->first;
+        if (s.compare(0, key.size(), key) == 0) return {entry->first, entry->second};
+    }
+    return {"", {-1, -1, -1}}; // pair if no match is found
+}
 
-void pass0::tokenize(string textIn){
+Token0List pass0::tokenize(string textIn){
     string out = "";
     uint cursor = 0;
-    cout << "\nin = " << textIn <<endl;
-
-    int languageSize = language.size();
     string next = "";
-    string blank = " ";
-    int keywordFoundAt = -1;
+    pass0::KeyPairType keyPairFound;
+    uint moveCursor;
+
+    Token0List tokens;
+    Token0 token;
+
     while (cursor < textIn.size() ){
         // if (int(s[cursor1]) == 32) {
-        if (string() + textIn[cursor] == " "){
+        if (string() + textIn[cursor] == " "){                              // skip blanks
             cursor++; continue;
         }
-        uint increment = 1;
-        for (int i=0; i<languageSize; i++){
-            string keyword = language[i];
-            uint sz = keyword.size();
-            if (keyword == textIn.substr(cursor, sz)){      //keyword found
-                increment = keyword.size();
-                keywordFoundAt = i;
-                break;
-            }
-        }
-        std::pair<std::string, string> result =
-            findKeyword(pass0::languageMap,textIn);
-        if (keywordFoundAt < 0){
+        keyPairFound = findKeyword(pass0::keywords,textIn.substr(cursor));
+        if (keyPairFound.first == ""){                                      // a digit or variable
             next += textIn[cursor];
-            cursor += increment;
+            moveCursor = 1;
+            token.opcode = 80; token.arity = 0; token.precedence =0;
         }else{
-            if (next.size() > 0) out  += " {" + next + "} ";
+            if (next.size() > 0) out  += " {" + next + "}";                 // a keyword
             next="";
-            out  += keywords[keywordFoundAt];
-            keywordFoundAt = -1;
-            cursor += increment;
+            token = keyPairFound.second;
+            out  += " |" + keyPairFound.first + "|";
+            // out  += " " + keyPairFound->second.opcode;
+            moveCursor = keyPairFound.first.size();
         }
+        cursor += moveCursor;
+        tokens.push_back(token);
     }
     if (next.size() > 0)
         out  += " {" + next +"} ";
-    // match(textIn,  out);
+    tokens.push_back({90,0,0});
 
     cout << "\nout= " << out <<endl;
+    return tokens;
 }

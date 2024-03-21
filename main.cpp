@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     uint32_t choice = 0;
     string ch = "";
 
-    int a = 0;              //test 0 ==> pass0 else calc
+    int a = 1;              //test 0 ==> pass0 else calc
 
     while (true) {
         cout << "press ENTER to continue";
@@ -79,7 +79,8 @@ int main(int argc, char *argv[])
 
                     if (a == 0){
                         pass0 p0;
-                        p0.tokenize(text);
+                        Token0List pass0Tokens = p0.tokenize(text);
+                        printPass0(pass0Tokens, 5);
                     }
 
                     else{

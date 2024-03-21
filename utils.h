@@ -55,6 +55,22 @@ inline void printRPN(const RPNTokenList& symList, int tab){
     for (const RPNToken& element : symList)
         std::cout << std::setw(tab) << element.arity << " ";
     std::cout << std::endl;
+}
+
+
+inline void printPass0(const Token0List& symList, int tab){
+    std::cout << "opcode: ";
+    for (const Token0& element : symList)
+        std::cout << std::setw(tab) << element.opcode << " ";
+    std::cout << std::endl;
+    std::cout << "arity : ";
+    for (const Token0& element : symList)
+        std::cout << std::setw(tab) << element.arity << " ";
+    std::cout << std::endl;
+    std::cout << "preced: ";
+    for (const Token0& element : symList)
+        std::cout << std::setw(tab) << element.precedence << " ";
+    std::cout << std::endl;
     // std::cout << "cursr : ";
     // for (const RPNToken& element : symList)
     //     std::cout << std::setw(tab) << element.cursor<< " ";

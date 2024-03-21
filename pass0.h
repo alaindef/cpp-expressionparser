@@ -9,44 +9,31 @@
 #include <stdio.h>
 #include <vector>
 #include <map>;
+#include <array>;
 
-// #include "defs.h"
-
+#include "defs.h"
 
 using namespace std;
 
+// using Token0 = array<int, 3>;
 
 class pass0
 {
 public:
     pass0();
 
-    void tokenize(string textIn);
-    vector<string> keywords;
+    Token0List tokenize(string textIn);
 
-    // private:
-    //     typedef struct {
-    //         string type;
-    //         string content;
-    //         int opcode;
-    //         int arity;
-    //         int precedence;
-    //         uint cursor;
-    //     } Token;
-    vector<string> language;
-    uint langsize;
-    // vector<Token>  tokens;
-    void match(string s, string &out);
+    using KeyPairType = pair<string, Token0>;
+    using MapType = map<string, Token0>;
 
-    // typedef std::map<std::string, string> kvPair;
-    // typedef std::map<std::string, string> MapType;
+    MapType keywords;
+    // MapType::iterator mapIter;
 
+    void defineKeywords();
+    KeyPairType findKeyword(const std::map<string, Token0>& language, const string& s);
 
-    typedef map<std::string, string> MapType;
-    MapType languageMap;
-    MapType::iterator mapIter;
-    void defineLanguage();
-    std::pair<string, string>  findKeyword(const std::map<std::string, string>& language, const string& s);
+    void printMap();
 };
 
 #endif // PASS0_H

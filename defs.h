@@ -2,6 +2,17 @@
 #include <string>
 #include <vector>
 
+
+
+using namespace std;
+
+// PASS0 should replace PASS1
+
+
+struct Token0 {int opcode; int arity; int precedence;} ;
+using Token0List = vector<Token0>;
+
+
 //  PASS 1 will scan the input test and generate a list of symbols
 //    we will assign a type to each allowed character  .
 //    e.g. character 'h' (ascii 104)  is a t_LETT, character '0' (ascii 48 )is a t_DIGIT. character (40) is t_PAR_L (left parenthesis)
