@@ -61,20 +61,20 @@ inline void printRPN(const RPNTokenList& symList, int tab){
 inline void printPass0(const Token0List& symList, int tab){
     std::cout << "opcode: ";
     for (const Token0& element : symList)
-        std::cout << std::setw(tab) << element.opcode << " ";
+        std::cout << "\t" << element.opcode << " ";
     std::cout << std::endl;
     std::cout << "arity : ";
     for (const Token0& element : symList)
-        std::cout << std::setw(tab) << element.arity << " ";
+        std::cout << "\t"  << element.arity << " ";
     std::cout << std::endl;
     std::cout << "preced: ";
     for (const Token0& element : symList)
-        std::cout << std::setw(tab) << element.precedence << " ";
+        std::cout << "\t"  << element.precedence << " ";
     std::cout << std::endl;
-    // std::cout << "cursr : ";
-    // for (const RPNToken& element : symList)
-    //     std::cout << std::setw(tab) << element.cursor<< " ";
-    // std::cout << std::endl;
+    std::cout << "value : ";
+    for (const Token0& element : symList)
+        std::cout << "\t"  << element.value << " ";
+    std::cout << std::endl;
 }
 
 inline bool isNumeric(const std::string& s)

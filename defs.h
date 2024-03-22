@@ -9,7 +9,7 @@ using namespace std;
 // PASS0 should replace PASS1
 
 
-struct Token0 {int opcode; int arity; int precedence;} ;
+struct Token0 {int opcode; int arity; int precedence; float value;} ;
 using Token0List = vector<Token0>;
 
 
@@ -32,7 +32,6 @@ typedef struct {
 } Token;
 
 typedef std::vector<Token> TokenList;
-
 
 
 //PASS 2 will scan the output of PASS1 and generate a list of tokens

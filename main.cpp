@@ -35,12 +35,12 @@ int main(int argc, char *argv[])
                              "2==3",
                              "a=3",
                              "a=14+3",
-                             "a=2*b+3",
+                             "a=2*b+c",
                              "a=14==14*2",
                              "1*2+3/4",
                              "3*(2+9)",
                              "(1*2)+(3/4-(5-6))",
-                             "(2+3)*(1<(-2)) + (6/2)",
+                             "(2+28)*(1<(-23)) + (6/2)",
                              "1+-2",
                              "6*2*4/5",
                              "(6)",
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     uint32_t choice = 0;
     string ch = "";
 
-    int a = 1;              //test 0 ==> pass0 else calc
+    int a = 0;              //test 0 ==> pass0 else calc
 
     while (true) {
         cout << "press ENTER to continue";
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
                     if (a == 0){
                         pass0 p0;
                         Token0List pass0Tokens = p0.tokenize(text);
-                        printPass0(pass0Tokens, 5);
+                        printPass0(pass0Tokens, 7);
                     }
 
                     else{

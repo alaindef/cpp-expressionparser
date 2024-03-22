@@ -2,6 +2,7 @@
 #ifndef PASS0_H
 #define PASS0_H
 
+#include "defs.h"
 
 #include <string>
 #include <iostream>
@@ -11,11 +12,10 @@
 #include <map>;
 #include <array>;
 
-#include "defs.h"
 
 using namespace std;
 
-// using Token0 = array<int, 3>;
+
 
 class pass0
 {
@@ -30,9 +30,13 @@ public:
     MapType keywords;
     // MapType::iterator mapIter;
 
-    void defineKeywords();
-    KeyPairType findKeyword(const std::map<string, Token0>& language, const string& s);
 
+private:
+
+    void defineKeywords();
+    bool findKeyword(const std::map<string, Token0>& language, const string& s, KeyPairType& result);
+    int getVarIndex(vector<string> &varnames, string param);
+    void storeValueOrIndex(string param, Token0& token);
     void printMap();
 };
 
