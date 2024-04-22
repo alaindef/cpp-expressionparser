@@ -44,35 +44,40 @@ expr14_assgn	::= var op14 expr13
 expr			::= expr14			| expr13
  */
 
-//PASS 2 will scan the output of PASS1 and generate a list of tokens
-// precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
-//                          or  https://en.wikipedia.org/wiki/Order_of_operations
+// PASS 2 will scan the output of PASS1 and generate a list of tokens
+//  precedence is according to   https://en.cppreference.com/w/cpp/language/operator_precedence#cite_note-2
+//                           or  https://en.wikipedia.org/wiki/Order_of_operations
 
-
-struct TkList{
+// TkList has the list of input tokens built from the input expression as text
+struct TkList
+{
     vector<Token> tokens;
     int cursor = 0;
-    Token pop(){
-        if (cursor >= tokens.size()) throw invalid_argument("symbols missing!");
+    Token pop()
+    {
+        if (cursor >= tokens.size())
+            throw invalid_argument("symbols missing!");
         return tokens[cursor++];
     };
-    Token get(int shift){
+    Token get(int shift)
+    {
         int newCursor = cursor + shift;
-        if ((newCursor < 0) || (newCursor > tokens.size())) throw invalid_argument("out of reach");
+        if ((newCursor < 0) || (newCursor > tokens.size()))
+            throw invalid_argument("out of reach");
         return tokens[newCursor];
     }
-    bool done(){
+    bool done()
+    {
         return (cursor > tokens.size());
     }
 };
 
-    // RPNToken is used in the OUTPUT of RPNizer, en input for the Interpreter
-    struct RPNToken{
-        OC opcode;
-        int arity;
-        float value;
-    } ;
+// RPNToken is used in the OUTPUT of RPNizer, en input for the Interpreter
+struct RPNToken
+{
+    OC opcode;
+    int arity;
+    float value;
+};
 
-    vector<RPNToken> makeRPN(vector<Token> tkListIn);
-
-
+vector<RPNToken> makeRPN(vector<Token> tkListIn);

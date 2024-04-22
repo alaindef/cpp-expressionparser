@@ -4,25 +4,14 @@
 #include <functional>
 #include "rpngenerator.h"
 
-class Calculator
-{
-public:;;
+    void calcandprint(std::vector<RPNToken> &tokenlist, VarTable * vartabel, bool prt);
+    float calc(std::vector<RPNToken> &tokenlist, VarTable * vartabel);
 
-    Calculator();
-    Calculator(VarTable *vt) : vartab(vt){}
-    void calcandprint(std::vector<RpnGenerator::RPNToken> &tokenlist, bool prt);
-    float calc(std::vector<RpnGenerator::RPNToken> &tokenlist);
+    // VarTable * vartab;
 
-private:
-    VarTable * vartab;
-
-    std::vector<RpnGenerator::RPNToken> inputRPNTokenList;
     static float fun_elv(float x, float y, float z){
         if (x>0.5) return y; else return z;}
-    int cursor;
-
-};
-
+    static int cursor;
 
 
 #endif // CALCULATOR_H

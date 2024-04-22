@@ -6,13 +6,13 @@ enable_testing()
 
 set(SOURCES
     main.cpp
-# calculator.cpp
+    calculator.cpp
     tokengenerator.cpp
     rpngenerator.cpp
     vartable.cpp)
 
 set(HEADERS
-     # calculator.h
+     calculator.h
      tokengenerator.h
      rpngenerator.h
      vartable.h

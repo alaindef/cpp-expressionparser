@@ -7,7 +7,7 @@
 #include "vartable.h"
 #include "tokengenerator.h"
 #include "rpngenerator.h"
-// #include "calculator.h"
+#include "calculator.h"
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 
                     vector<RPNToken> tokensRPN = makeRPN(tokenList);
 
-                    // calc.calcandprint(tokensRPN, true);
+                    calcandprint(tokensRPN, &vvv, true);
 
                 } else cout << "choice not allowed" << endl;
             }else
