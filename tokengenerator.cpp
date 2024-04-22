@@ -7,8 +7,6 @@
 
 using namespace std;
 
-vector<float>   varValues;
-
 void printtokengenerator(const vector<Token>& RPNTokens,
                          VarTable *vartabel){
     const string ppOC[20] ={"NUM", "VAR", "MUL", "DIV", "ADD", "SUB", "PAS", "CHS", "LT", "LE", "GT", "GE", "EQ",

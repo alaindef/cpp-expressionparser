@@ -7,8 +7,6 @@ using namespace std;
 
 struct VarTable
 {
-public:
-
     int getIndex(string name);
     // look for name in the table and return the storage index
     // if not found create a new entry and return the new index

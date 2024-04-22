@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 void expr(Token &tk, TkList tkList, vector<RPNToken> &tokensout);
 void expr1_par(Token &tk, TkList &tkList, vector<RPNToken> &tokensout);
 void expr0_val(Token &tk, TkList &tkList, vector<RPNToken> &tokensout);
@@ -75,7 +74,6 @@ vector<RPNToken> makeRPN(vector<Token> tkListIn)
     // we will move the input token list into a structure TkList, equipped with member funtions
     TkList tkList;
     tkList.tokens = tkListIn;
-
     vector<RPNToken> tokensout;
 
     tokensout.clear();

@@ -14,14 +14,14 @@ float calc(std::vector<RPNToken>& tokenlist, VarTable * vartabel){
 
     //remember that operands will be eaten in reverse order
     switch (last.opcode) {
-    case OC::NUM:   res = last.value;                                   break;
-    case OC::VAR:   res = vartabel->getValue((int)last.value);            break;
+    case OC::NUM:   res = last.value;                                                       break;
+    case OC::VAR:   res = vartabel->getValue((int)last.value);                              break;
     case OC::MUL:   res = calc(tokenlist, vartabel) * calc(tokenlist, vartabel);            break;
     case OC::DIV:   v1  = calc(tokenlist, vartabel);  res = calc(tokenlist, vartabel)/v1;   break;
     case OC::ADD:   res = calc(tokenlist, vartabel) + calc(tokenlist, vartabel);            break;
     case OC::SUB:   v1  = calc(tokenlist, vartabel);  res = calc(tokenlist, vartabel) - v1; break;
-    case OC::PAS:   res = calc(tokenlist, vartabel);                              break;
-    case OC::CHS:   res = -calc(tokenlist, vartabel);                             break;
+    case OC::PAS:   res = calc(tokenlist, vartabel);                                        break;
+    case OC::CHS:   res = -calc(tokenlist, vartabel);                                       break;
     case OC::LT:    res = calc(tokenlist, vartabel)   >  calc(tokenlist, vartabel);         break;
     case OC::LE:    res = calc(tokenlist, vartabel)   >= calc(tokenlist, vartabel);         break;
     case OC::GT:    res = calc(tokenlist, vartabel)   <  calc(tokenlist, vartabel);         break;
@@ -29,10 +29,10 @@ float calc(std::vector<RPNToken>& tokenlist, VarTable * vartabel){
     case OC::EQ:    res = calc(tokenlist, vartabel)   == calc(tokenlist, vartabel);         break;
     case OC::NE:    res = calc(tokenlist, vartabel)   != calc(tokenlist, vartabel);         break;
     case OC::ASS:   res = calc(tokenlist, vartabel);
-        vartabel->setVar(tokenlist[cursor-1].value, res); cursor--;                       break;
+        vartabel->setVar(tokenlist[cursor-1].value, res); cursor--;                         break;
     case OC::COL:   v1  = calc(tokenlist, vartabel);  v2=calc(tokenlist, vartabel);
-        res = calc(tokenlist, vartabel)?v2:v1;                                                    break;
-    default:                                                                            break;
+        res = calc(tokenlist, vartabel)?v2:v1;                                              break;
+    default:                                                                                break;
     }
     return res;
 }
