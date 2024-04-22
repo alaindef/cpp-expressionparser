@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 
     VarTable vvv;
 
-    RpnGenerator p3(&vvv);
     // Calculator calc(&variables);
     vector<Token> tokenList;
     // vector<RpnGenerator::RPNToken> tokensRPN;
@@ -126,7 +125,7 @@ int main(int argc, char *argv[])
                                                             &keywords,
                                                             &vvv);
 
-                    vector<RpnGenerator::RPNToken> tokensRPN = p3.makeRPN(tokenList);
+                    vector<RPNToken> tokensRPN = makeRPN(tokenList);
 
                     // calc.calcandprint(tokensRPN, true);
 

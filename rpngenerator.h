@@ -66,12 +66,6 @@ struct TkList{
     }
 };
 
-class RpnGenerator
-{
-public:
-    RpnGenerator();
-    RpnGenerator(VarTable *vt) : vartab(vt){}
-
     // RPNToken is used in the OUTPUT of RPNizer, en input for the Interpreter
     struct RPNToken{
         OC opcode;
@@ -81,34 +75,4 @@ public:
 
     vector<RPNToken> makeRPN(vector<Token> tkListIn);
 
-private:
 
-
-
-    VarTable * vartab;
-
-    vector<RPNToken> tokensout;
-    Token nextToken(TkList& tkList);
-
-    void expr(Token& tk, TkList tkList);
-    void expr0_val(Token& tk, TkList& tkList);
-    void expr1_par(Token& tk, TkList& tkList);
-    void expr2_plus1(Token& tk, TkList& tkList);
-    void expr3_mul(Token& tk, TkList& tkList);
-    void expr4_plus(Token& tk, TkList& tkList);
-    void expr6_less(Token& tk, TkList& tkList);
-    void expr7_eq(Token& tk, TkList& tkList);
-    void expr13_tst(Token& tk, TkList& tkList);
-    void expr14_assgn(Token& tk, TkList& tkList);
-
-    bool precedenceIs2(TkList tkList);
-    void pushToken(Token tk, vector<RPNToken>& out );
-
-    bool isa(const Token& token, const vector<OC>& allowedTypes){
-        //    check if the symbol sym is one of the symbols in the list op
-        return(count(allowedTypes.begin(), allowedTypes.end(), token.opcode) > 0);
-        return true;
-    }
-
-    void printRPN(const vector<RPNToken>& RPNTokens, int tab);
-};
