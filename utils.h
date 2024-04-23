@@ -2,6 +2,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+//pretty print opcodes
 const std::string ppOC[20] ={"NUM", "VAR", "MUL", "DIV", "ADD", "SUB", "PAS", "CHS", "LT", "LE", "GT", "GE", "EQ",
                          "NE", "ASS", "QU", "COL", "PAR_L", "PAR_R", "NIL"};
 

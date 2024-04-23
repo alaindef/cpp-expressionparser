@@ -13,7 +13,8 @@
 #endif
 
 using namespace std;
-void sleep(unsigned msec) {
+void sleep(unsigned msec)
+{
     struct timespec sleepTime;
     sleepTime.tv_sec = msec / 1000;
     sleepTime.tv_nsec = (msec % 1000) * 1000000;
@@ -21,29 +22,30 @@ void sleep(unsigned msec) {
 }
 
 int main(int argc, char *argv[])
-{    (void)(argc);(void)(argv);
+{
+    (void)(argc);
+    (void)(argv);
     string text = "";
 
     const map<std::string, Token> keywords = {
-        {"NUM", {OC::NUM,  0,  0,  0}},                 // {opcode, arity, precedence, value}
-        {"VAR", {OC::VAR,  0,  0,  0}},
-        {"*",   {OC::MUL,  2,  3,  0}},
-        {"/",   {OC::DIV,  2,  3,  0}},
-        {"+",   {OC::ADD,  2,  4,  0}},
-        {"-",   {OC::SUB,  2,  4,  0}},
-        {"<",   {OC::LT,   2,  6,  0}},
-        {"<=",  {OC::LE,   2,  6,  0}},
-        {">",   {OC::GT,   2,  6,  0}},
-        {">=",  {OC::GE,   2,  6,  0}},
-        {"==",  {OC::EQ,   2,  7,  0}},
-        {"!=",  {OC::NE,   2,  7,  0}},
-        {"?",   {OC::QU,  -1, 13,  0}},
-        {":",   {OC::COL,  3, 13,  0}},
-        {"=",   {OC::ASS,  2, 14,  0}},
-        {"(",   {OC::PAR_L,0,  0,  0}},
-        {")",   {OC::PAR_R,0,  0,  0}},
-        {"NIL", {OC::NIL,  0,  0,  0}}
-    };
+        {"NUM", {OC::NUM, 0, 0, 0}}, // {opcode, arity, precedence, value}
+        {"VAR", {OC::VAR, 0, 0, 0}},
+        {"*", {OC::MUL, 2, 3, 0}},
+        {"/", {OC::DIV, 2, 3, 0}},
+        {"+", {OC::ADD, 2, 4, 0}},
+        {"-", {OC::SUB, 2, 4, 0}},
+        {"<", {OC::LT, 2, 6, 0}},
+        {"<=", {OC::LE, 2, 6, 0}},
+        {">", {OC::GT, 2, 6, 0}},
+        {">=", {OC::GE, 2, 6, 0}},
+        {"==", {OC::EQ, 2, 7, 0}},
+        {"!=", {OC::NE, 2, 7, 0}},
+        {"?", {OC::QU, -1, 13, 0}},
+        {":", {OC::COL, 3, 13, 0}},
+        {"=", {OC::ASS, 2, 14, 0}},
+        {"(", {OC::PAR_L, 0, 0, 0}},
+        {")", {OC::PAR_R, 0, 0, 0}},
+        {"NIL", {OC::NIL, 0, 0, 0}}};
 
     VarTable vvv;
 
@@ -53,24 +55,26 @@ int main(int argc, char *argv[])
 
     // SPEEDTEST
 
-    if (1==2){                          // 1==1 if you want it!
+    if (1 == 2)
+    { // 1==1 if you want it!
         text = "b=a*a*a/100000000";
-        tokenList = makeTokenList(text, &keywords, &vvv);
+        tokenList = makeTokenList(text, keywords, vvv);
         // tokensRPN = p3.makeRPN(tokenList);
         int n = 0;
-        while (n<500000){
+        while (n < 500000)
+        {
             std::cout << "\033[H\033[2J\033[3J";
             vvv.setVar(0, n);
             // calc.calcandprint(tokensRPN, false);
             n++;
         }
-        sleep(100);     // without sleep, cout gets in trouble in this final phase
+        sleep(100); // without sleep, cout gets in trouble in this final phase
         // calc.calcandprint(tokensRPN, true);
         return 0;
     }
     // SPEEDTEST END
 
-    vector<string> inputs = {"","type it yourself",
+    vector<string> inputs = {"", "type it yourself",
                              "4/5",
                              "2<3",
                              "2>3",
@@ -101,40 +105,52 @@ int main(int argc, char *argv[])
     cout << "\nchoose: (0 to exit)\n"
             "\n1. enter expression";
 
-    for (long unsigned int i = 2; i<inputs.size(); i++)
-        cout << "\n" << i << ". " << inputs[i] ;
+    for (long unsigned int i = 2; i < inputs.size(); i++)
+        cout << "\n"
+             << i << ". " << inputs[i];
     cout << endl;
     cout << "\nvartable at start:";
     vvv.printVarTable();
-    while (true) {
+    while (true)
+    {
         cout << "\nchoice (0 to exit, 1 to enter expression manually, r to toggle reporting level) ==> ";
-        cin >> ch; cin.ignore();
-        if (ch!=""){
-            if (isNumeric(ch) ){
+        cin >> ch;
+        cin.ignore();
+        if (ch != "")
+        {
+            if (isNumeric(ch))
+            {
                 choice = stoi(ch);
-                if (choice < inputs.size()){
-                    if (choice == 0) return 0;
-                    if (choice == 1) {
+                if (choice < inputs.size())
+                {
+                    if (choice == 0)
+                        return 0;
+                    if (choice == 1)
+                    {
                         getline(cin, text);
-                        if (text == "") continue;
+                        if (text == "")
+                            continue;
                     }
-                    else text = inputs[choice];
-                    cout << "text in:\t\t" << text << "\t\t";
+                    else
+                        text = inputs[choice];
+                    cout << "\ntext in:\t\t" << text << "\t\t";
 
-                    vector<Token> tokenList = makeTokenList(text,
-                                                            &keywords,
-                                                            &vvv);
+                    // directly from expression to RPN:
+                    vector<RPNToken> tokensRPN = makeRPN(text, keywords, vvv);
 
-                    vector<RPNToken> tokensRPN = makeRPN(tokenList);
+                    // separate calls:
+                    // vector<Token> tokenList = makeTokenList(text, keywords, vvv);
+                    // vector<RPNToken> tokensRPN = makeRPN(tokenList);
 
                     calcandprint(tokensRPN, &vvv, true);
-
-                } else cout << "choice not allowed" << endl;
-            }else
-                if (ch=="r")
-                    vvv.errorlevel = 1 - vvv.errorlevel;
+                }
                 else
-                    cout << "no  number. retry" << endl;
+                    cout << "choice not allowed" << endl;
+            }
+            else if (ch == "r")
+                vvv.errorlevel = 1 - vvv.errorlevel;
+            else
+                cout << "no  number. retry" << endl;
         }
     };
 

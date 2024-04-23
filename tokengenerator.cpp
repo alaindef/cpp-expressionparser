@@ -8,11 +8,11 @@
 using namespace std;
 
 void printtokengenerator(const vector<Token>& RPNTokens,
-                         VarTable *vartabel){
+                         VarTable& vartabel){
     const string ppOC[20] ={"NUM", "VAR", "MUL", "DIV", "ADD", "SUB", "PAS", "CHS", "LT", "LE", "GT", "GE", "EQ",
                              "NE", "ASS", "QU", "COL", "PAR_L", "PAR_R", "NIL"};
 
-    if (vartabel->errorlevel==0) return;
+    if (vartabel.errorlevel==0) return;
     cout << "opcode : ";
     for (const Token& element : RPNTokens)
         // std::cout << "\t"  << element.value << " ";
@@ -61,8 +61,8 @@ void storeValueOrIndex(string param,
 }
 
 vector<Token> makeTokenList(string textIn,
-                            const map<std::string,Token> * keywords,
-                            VarTable * vartabel){
+                            const map<std::string,Token>& keywords,
+                            VarTable& vartabel){
     string out = "";                                        // only for reporting
     int cursor = 0;
     string operand = "";
@@ -74,10 +74,10 @@ vector<Token> makeTokenList(string textIn,
 
     while (cursor < textIn.size() ){
         if (textIn[cursor] == ' '){cursor++; continue;}
-        if (findKeyword(*keywords, textIn.substr(cursor), keyPairFound)){
+        if (findKeyword(keywords, textIn.substr(cursor), keyPairFound)){
             // now deal with the operand finished building
             if (operand.size() > 0) {                       // operand is a num or var
-                storeValueOrIndex(operand, token, *vartabel);
+                storeValueOrIndex(operand, token, vartabel);
                     // if num store it in token, if var reserve an index for it in var array
                 tokens.push_back(token);
                 out  += "\t{" + operand + "}";
@@ -96,14 +96,14 @@ vector<Token> makeTokenList(string textIn,
         cursor += moveCursor;
     }
     if (operand.size() > 0){                                // operand is a num or var
-        storeValueOrIndex(operand, token, *vartabel);
+        storeValueOrIndex(operand, token, vartabel);
         tokens.push_back(token);
         out  += "\t{" + operand + "} ";
     }
     tokens.push_back({OC::NIL,  0,  0,  0});
     out  += "\t{"; out  += "ETX"; out  += "} ";
 
-    if (vartabel->errorlevel) cout << "\ntokenList\nout=\t" << out <<endl;
+    if (vartabel.errorlevel) cout << "\ntokenList\nout=\t" << out <<endl;
     printtokengenerator(tokens, vartabel);
     return tokens;
 }

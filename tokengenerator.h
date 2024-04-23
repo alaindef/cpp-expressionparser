@@ -16,7 +16,7 @@ struct Token {
     float value;} ;
 
 vector<Token> makeTokenList(string textIn,
-                            const map<std::string,Token> * keywords,
-                            VarTable * vartabel);
+                            const map<std::string,Token>& keywords,
+                            VarTable& vartabel);
 
 #endif // tokengenerator_H

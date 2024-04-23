@@ -81,3 +81,6 @@ struct RPNToken
 };
 
 vector<RPNToken> makeRPN(vector<Token> tkListIn);
+vector<RPNToken> makeRPN(string textIn,
+                         const map<std::string, Token>& keywords,
+                         VarTable& vartabel);

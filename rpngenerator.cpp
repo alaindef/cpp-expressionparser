@@ -68,7 +68,6 @@ void pushToken(Token tk, vector<RPNToken> &out)
     out.push_back(newRPNToken);
 }
 
-
 vector<RPNToken> makeRPN(vector<Token> tkListIn)
 {
     // we will move the input token list into a structure TkList, equipped with member funtions
@@ -90,6 +89,14 @@ vector<RPNToken> makeRPN(vector<Token> tkListIn)
     };
     printRPN(tokensout, 5);
     return tokensout;
+}
+
+vector<RPNToken> makeRPN(string textIn,
+                         const map<std::string, Token> &keywords,
+                         VarTable &vartabel)
+{
+    vector<Token> tokens = makeTokenList(textIn, keywords, vartabel);
+    return makeRPN(tokens);
 }
 
 Token nextToken(TkList &tkList)
