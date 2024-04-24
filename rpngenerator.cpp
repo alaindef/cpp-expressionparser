@@ -22,7 +22,6 @@ void printRPN(const vector<RPNToken> &RPNTokens, int tab, int report)
     if (!report)
         return;
     cout << "******************** RPN sequence ********************\n";
-    // if (vartab->errorlevel==0) return;
     cout << "opcode : ";
     for (const RPNToken &element : RPNTokens)
         cout << "\t" << ppOC[static_cast<int>(element.opcode)] << " ";

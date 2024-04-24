@@ -74,7 +74,7 @@ struct TkList
     }
 };
 
-// RPNToken is used in the OUTPUT of RPNizer, en input for the Interpreter
+// RPNToken is used in the OUTPUT of makeRPN, en input for the Calculator
 struct RPNToken
 {
     OC opcode;

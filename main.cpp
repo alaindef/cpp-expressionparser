@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         {")", {OC::PAR_R, 0, 0, 0}},
         {"NIL", {OC::NIL, 0, 0, 0}}};
 
-    VarTable vvv;
+    VarTable VARIABLES;
 
     // Calculator calc(&variables);
     vector<Token> tokenList;
@@ -60,13 +60,13 @@ int main(int argc, char *argv[])
     if (1 == 2)
     { // 1==1 if you want it!
         text = "b=a*a*a/100000000";
-        tokenList = makeTokenList(text, keywords, vvv, 0);
+        tokenList = makeTokenList(text, keywords, VARIABLES, 0);
         // tokensRPN = p3.makeRPN(tokenList);
         int n = 0;
         while (n < 500000)
         {
             std::cout << "\033[H\033[2J\033[3J";
-            vvv.setVar(0, n);
+            VARIABLES.setVar(0, n);
             // calc.calcandprint(tokensRPN, false);
             n++;
         }
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
              << i << ". " << inputs[i];
     cout << endl;
     cout << "\nvartable at start:";
-    vvv.printVarTable();
+    VARIABLES.printVarTable();
     while (true)
     {
         cout << "\nchoice (0 to exit, 1 to enter expression manually, r to toggle reporting level) ==> ";
@@ -131,9 +131,9 @@ int main(int argc, char *argv[])
                     if (choice == 1)
                     {
                         getline(cin, text);
-                        tokensRPN = makeRPN(text, keywords, vvv, reportLevel);
-                        int cursor = 17;
-                        calc(tokensRPN, vvv);
+                        tokensRPN = makeRPN(text, keywords, VARIABLES, reportLevel);
+                        // calc(tokensRPN, VARIABLES);
+                        calcandprint(tokensRPN, VARIABLES, true);
                         if (text == "")
                             continue;
                     }
@@ -142,13 +142,13 @@ int main(int argc, char *argv[])
                     cout << "\ntext in:\t\t" << text << "\t\t";
 
                     // directly from expression to RPN:
-                    tokensRPN = makeRPN(text, keywords, vvv, reportLevel);
+                    tokensRPN = makeRPN(text, keywords, VARIABLES, reportLevel);
 
                     // separate calls:
-                    // vector<Token> tokenList = makeTokenList(text, keywords, vvv, reportLevel);
+                    // vector<Token> tokenList = makeTokenList(text, keywords, VARIABLES, reportLevel);
                     // vector<RPNToken> tokensRPN = makeRPN(tokenList);
 
-                    calcandprint(tokensRPN, vvv, true);
+                    calcandprint(tokensRPN, VARIABLES, true);
                 }
                 else
                     cout << "choice not allowed" << endl;
