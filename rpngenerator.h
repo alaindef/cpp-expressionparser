@@ -1,10 +1,3 @@
-#pragma once
-#include "tokengenerator.h"
-
-#include <vector>
-#include <algorithm>
-#include <iostream>
-
 /* BACKUS NAUR definition
 
 letter          ::= a | b | c | ....
@@ -23,11 +16,11 @@ op14-assgn		::=	=				|
 
 example:
 a = 1 * 2 + 3 < 4 == 5 ? 6 : 7
-    <e3->7
+    <e3->
     <--e4--->
     <----e6----->
     <-------e7------->
-    <----------e13----------->
+    <----------e13----------->      [ is like a=(1*2+3<4==5)?6:7  -precedence of elvis operator]
 <-----------e14-------------->
 
 //
@@ -49,6 +42,14 @@ expr			::= expr14			| expr13
 //                           or  https://en.wikipedia.org/wiki/Order_of_operations
 
 // TkList has the list of input tokens built from the input expression as text
+
+#pragma once
+#include "tokengenerator.h"
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+// we put the input token list in a struct, with access operators
 struct TkList
 {
     vector<Token> tokens;
@@ -63,7 +64,8 @@ struct TkList
     {
         int newCursor = cursor + shift;
         if ((newCursor < 0) || (newCursor > tokens.size()))
-            throw invalid_argument("out of reach");
+            // throw invalid_argument("out of reach");
+            std::cout << "trying to get item outside the list" << endl;
         return tokens[newCursor];
     }
     bool done()
@@ -80,7 +82,7 @@ struct RPNToken
     float value;
 };
 
-vector<RPNToken> makeRPN(vector<Token> tkListIn);
+vector<RPNToken> makeRPN(vector<Token> tkListIn, int report);
 vector<RPNToken> makeRPN(string textIn,
                          const map<std::string, Token>& keywords,
-                         VarTable& vartabel);
+                         VarTable& vartabel, int report);

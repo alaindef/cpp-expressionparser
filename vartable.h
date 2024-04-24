@@ -7,6 +7,12 @@ using namespace std;
 
 struct VarTable
 {
+
+    struct VarValue{string name; float value;};
+
+    vector<VarValue> vartab = {{"a", 0},
+                               {"b", 0}};
+
     int getIndex(string name);
     // look for name in the table and return the storage index
     // if not found create a new entry and return the new index
@@ -21,16 +27,6 @@ struct VarTable
     // returns index
 
     void printVarTable();
-
-    int errorlevel = 0;                  //provisional - controls reporting
-
-    // private:
-
-    struct VarValue {string name; float value;};
-
-    vector<VarValue> vartab = {{"a", 0},
-                               {"b", 0}};
-
 };
 
 #endif // VARTABLE_H

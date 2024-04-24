@@ -3,6 +3,7 @@
 
 using namespace std;
 
+
 int VarTable::getIndex(string name){
     for (int i=0; i < vartab.size(); i++)
         if (name == vartab[i].name)

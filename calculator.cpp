@@ -37,12 +37,12 @@ float calc(std::vector<RPNToken>& tokenlist, VarTable& vartabel){
     return res;
 }
 
-void calcandprint(std::vector<RPNToken> &tokenlist, VarTable * vartabel, bool prt) {
+void calcandprint(std::vector<RPNToken> &tokenlist, VarTable& vartabel, bool prt) {
     cursor = tokenlist.size();
-    float result = calc(tokenlist, *vartabel);
+    float result = calc(tokenlist, vartabel);
     if (prt){
         std::cout << "EVALUATION RESULT ==> " << std::to_string(result) << std::endl;
-        vartabel->printVarTable();
+        vartabel.printVarTable();
         cout << "_______________________________________________________________________________" << std::endl;
     }
 }

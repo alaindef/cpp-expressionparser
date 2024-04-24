@@ -27,6 +27,8 @@ int main(int argc, char *argv[])
     (void)(argv);
     string text = "";
 
+    int reportLevel = 0; // provisional - controls reporting
+
     const map<std::string, Token> keywords = {
         {"NUM", {OC::NUM, 0, 0, 0}}, // {opcode, arity, precedence, value}
         {"VAR", {OC::VAR, 0, 0, 0}},
@@ -58,7 +60,7 @@ int main(int argc, char *argv[])
     if (1 == 2)
     { // 1==1 if you want it!
         text = "b=a*a*a/100000000";
-        tokenList = makeTokenList(text, keywords, vvv);
+        tokenList = makeTokenList(text, keywords, vvv, 0);
         // tokensRPN = p3.makeRPN(tokenList);
         int n = 0;
         while (n < 500000)
@@ -97,8 +99,9 @@ int main(int argc, char *argv[])
                              "0?222:3",
                              "2*3+5<1?777:((1<2 + (6/2))+17/4)",
                              "(1<2 + (6/2))+17/4",
-                             "2*-5+17*2-(45<2)"};
+                             "2*-5+17*2-(45<b)"};
 
+    vector<RPNToken> tokensRPN;
     string ch = "";
     long unsigned int choice = 0;
 
@@ -128,6 +131,9 @@ int main(int argc, char *argv[])
                     if (choice == 1)
                     {
                         getline(cin, text);
+                        tokensRPN = makeRPN(text, keywords, vvv, reportLevel);
+                        int cursor = 17;
+                        calc(tokensRPN, vvv);
                         if (text == "")
                             continue;
                     }
@@ -136,19 +142,19 @@ int main(int argc, char *argv[])
                     cout << "\ntext in:\t\t" << text << "\t\t";
 
                     // directly from expression to RPN:
-                    vector<RPNToken> tokensRPN = makeRPN(text, keywords, vvv);
+                    tokensRPN = makeRPN(text, keywords, vvv, reportLevel);
 
                     // separate calls:
-                    // vector<Token> tokenList = makeTokenList(text, keywords, vvv);
+                    // vector<Token> tokenList = makeTokenList(text, keywords, vvv, reportLevel);
                     // vector<RPNToken> tokensRPN = makeRPN(tokenList);
 
-                    calcandprint(tokensRPN, &vvv, true);
+                    calcandprint(tokensRPN, vvv, true);
                 }
                 else
                     cout << "choice not allowed" << endl;
             }
             else if (ch == "r")
-                vvv.errorlevel = 1 - vvv.errorlevel;
+                reportLevel = 1 - reportLevel;
             else
                 cout << "no  number. retry" << endl;
         }

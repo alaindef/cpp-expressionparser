@@ -19,7 +19,7 @@ void expr13_tst(Token &tk, TkList &tkList, vector<RPNToken> &tokensout);
 
 void printRPN(const vector<RPNToken> &RPNTokens, int tab)
 {
-    cout << "RPN sequence:\n";
+    cout << "******************** RPN sequence ********************\n";
     // if (vartab->errorlevel==0) return;
     cout << "opcode : ";
     for (const RPNToken &element : RPNTokens)
@@ -49,14 +49,14 @@ bool isa(const Token &token, const vector<OC> &allowedTypes)
 bool precedenceIs2(TkList tkList)
 {
     // the current operator is "+" or "-".
-    // we check if it it a binary operator (arity 2, precedence 1) or a unary op (arity 1, precedence 2)
+    // we check if it is a binary operator (arity 2, precedence 1) or a unary op (arity 1, precedence 2)
     // this depends on the previous token
-    if ((tkList.cursor == 1) ||
-        (!isa(tkList.get(-2), {OC::PAR_R, OC::VAR, OC::NUM})))
-    {
-        return true;
-    }
-    return false;
+    Token t = tkList.get(-2);
+    if (isa(t, {OC::NIL}))
+        return true; // expression starts with + or -
+    if (isa(t, {OC::PAR_R, OC::VAR, OC::NUM}))
+        return false;
+    return true;
 }
 
 void pushToken(Token tk, vector<RPNToken> &out)
@@ -68,7 +68,7 @@ void pushToken(Token tk, vector<RPNToken> &out)
     out.push_back(newRPNToken);
 }
 
-vector<RPNToken> makeRPN(vector<Token> tkListIn)
+vector<RPNToken> makeRPN(vector<Token> tkListIn, int report)
 {
     // we will move the input token list into a structure TkList, equipped with member funtions
     TkList tkList;
@@ -76,6 +76,7 @@ vector<RPNToken> makeRPN(vector<Token> tkListIn)
     vector<RPNToken> tokensout;
 
     tokensout.clear();
+    Token tk = tkList.pop();
     try
     {
         Token tk = tkList.pop();
@@ -87,16 +88,17 @@ vector<RPNToken> makeRPN(vector<Token> tkListIn)
              << endl;
         ;
     };
-    printRPN(tokensout, 5);
+    if (report)
+        printRPN(tokensout, 5);
     return tokensout;
 }
 
 vector<RPNToken> makeRPN(string textIn,
                          const map<std::string, Token> &keywords,
-                         VarTable &vartabel)
+                         VarTable &vartabel, int report)
 {
-    vector<Token> tokens = makeTokenList(textIn, keywords, vartabel);
-    return makeRPN(tokens);
+    vector<Token> tokens = makeTokenList(textIn, keywords, vartabel, report);
+    return makeRPN(tokens, report);
 }
 
 Token nextToken(TkList &tkList)
