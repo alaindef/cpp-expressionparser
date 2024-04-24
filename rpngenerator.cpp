@@ -17,8 +17,10 @@ void expr6_less(Token &tk, TkList &tkList, vector<RPNToken> &tokensout);
 void expr7_eq(Token &tk, TkList &tkList, vector<RPNToken> &tokensout);
 void expr13_tst(Token &tk, TkList &tkList, vector<RPNToken> &tokensout);
 
-void printRPN(const vector<RPNToken> &RPNTokens, int tab)
+void printRPN(const vector<RPNToken> &RPNTokens, int tab, int report)
 {
+    if (!report)
+        return;
     cout << "******************** RPN sequence ********************\n";
     // if (vartab->errorlevel==0) return;
     cout << "opcode : ";
@@ -88,8 +90,7 @@ vector<RPNToken> makeRPN(vector<Token> tkListIn, int report)
              << endl;
         ;
     };
-    if (report)
-        printRPN(tokensout, 5);
+    printRPN(tokensout, 5, report);
     return tokensout;
 }
 
